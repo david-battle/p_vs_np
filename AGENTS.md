@@ -12,9 +12,11 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 
 - `p_vs_np_notes.md` — the discussion: AC's (ir)relevance to P vs NP, forcing
   absoluteness vs arithmetic incompleteness, the "P≠NP as a new axiom" question
-  (and the correction on independence), the GEB "prophetic" reading, and the
-  user's self-referential-structure intuition. Includes the AC framing (kangaroo
-  as "for" example, Vitali/Banach–Tarski as "against") that motivated it.
+  (and the correction on independence), the GEB "prophetic" reading, the
+  user's self-referential-structure intuition, the machine-Gödel proof-search
+  construction, and where self-reference can honestly attach (witness, proof
+  space, budget). Includes the AC framing (kangaroo as "for" example,
+  Vitali/Banach–Tarski as "against") that motivated it.
 
 ## Operating norms
 

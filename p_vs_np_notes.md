@@ -157,12 +157,14 @@ independence, making GEB prophetic.
 - Historical pattern is new *techniques* (non-relativizing, non-natural,
   non-algebrizing), not new *axioms* — momentum is toward more cleverness, not
   toward legislating.
-- **P vs NP has no self-reference.** GEB's core is self-reference (G says "I am
-  not provable"); P vs NP has none — no fixed point, no diagonalization over its
-  own provability. Its independence would be arithmetic incompleteness, a
-  different phenomenon from Gödelian self-reference; the only known route to it
-  is consistency strength (§3), which for P≠NP would force the Ben-David–Halevi
-  "almost polynomial" signature.
+- **The P vs NP *sentence* has no self-reference.** GEB's core is
+  self-reference (G says "I am not provable"); the Σ⁰₂ sentence P≠NP has none —
+  no fixed point, no diagonalization over its own provability. Its independence
+  would be arithmetic incompleteness, a different phenomenon from Gödelian
+  self-reference; the only known route to it is consistency strength (§3), which
+  for P≠NP would force the Ben-David–Halevi "almost polynomial" signature.
+  Qualification: the *proof space* does have genuine self-undermining structure
+  (natural proofs, Razborov's bounded-arithmetic unprovability) — see §8.2.
 - Concrete version of "barriers apply to independence too": Hartmanis–Hopcroft
   (1976) built a computable oracle A for which P^A vs NP^A is independent of
   ZFC, while for other oracles it is provable either way (P^B = NP^B for
@@ -212,6 +214,19 @@ also be the finder." It is still computational reflex, not a Gödelian fixed
 point, so the verdict below stands — but it is a firmer kernel than the hashing
 chain.
 
+**The honest modern form of the hashing intuition: meta-complexity.** The
+"hash hides the structure a fake fast algorithm would need" remark has a precise
+descendant. Meta-complexity studies problems whose *inputs are descriptions of
+computational objects* and whose question is "how hard is this?" — MCSP (minimum
+circuit size of a given truth table) and time-bounded Kolmogorov complexity
+K^t. **Liu–Pass (2020): one-way functions exist iff K^t is mildly hard on
+average.** Cryptography is *equivalent* to the hardness of recognizing
+compressibility/structure. This is self-referential in the honest sense — the
+problem of deciding whether something is hard is itself the problem whose
+hardness is at stake — and its lineage is Berry's paradox → Kolmogorov →
+Chaitin → K^t: the *other* classical self-reference paradox, not the
+Liar/Gödel one. It is the firmest anchor for §6 after Levin.
+
 **But the direction of the reflex is productive, not toward independence:**
 self-reducibility and isolation are *tools for algorithms*, not a doorway out of
 ZFC. The self-structure found so far is algorithmic and productive. The
@@ -229,7 +244,11 @@ in the *budget*, not in the search.
 **The bridge: P=NP ⇒ proof-search is in P.** Proofs are certificates, so
 `{⟨φ,1^k⟩ : φ has a ZFC-proof of length ≤ k}` is in NP (guess + verify) and
 hence in P if P=NP: there is a poly-time proof-finder. This is the honest
-content of "P=NP would make math easy." The budget `k` is essential.
+content of "P=NP would make math easy." The budget `k` is essential. Historical
+note: this is Gödel's own framing — his 1956 letter to von Neumann asks how fast
+one can find proofs of length n, essentially posing P vs NP as a proof-search
+question years before Cook. A tighter GEB tie-in than anything about
+independence.
 
 **The fixed point (genuine self-reference).** Gödel's diagonal lemma: for any
 formula ψ(x) there is a sentence φ with ZFC ⊢ φ ↔ ψ(⌜φ⌝). Let A be a poly-time
@@ -317,3 +336,81 @@ proofs and verify, which is already Levin-style search, no P=NP needed. P=NP
 only buys the *budget* (poly-time halting). That is why every G_A needs its `k`:
 without a budget, "A finds a proof of φ" is trivially r.e. and the construction
 dissolves. The self-reference lives in the budget, not in the search.
+
+## 8. Where self-reference can attach: witness, proof space, budget
+
+Follow-up to §7: constructing a self-referential statement *about* P vs NP.
+
+**8.0 Structural point: the sentence has no "self"; the witness does.** P vs NP
+is a Σ⁰₂ sentence. The diagonal lemma can bolt a provability predicate onto any
+sentence (φ ↔ "P≠NP ∧ ¬Prov(⌜φ⌝)"), but that is Gödel's G with a passenger —
+the complexity content plays no role. Real self-reference in complexity theory
+comes from **Kleene's recursion theorem** (a machine referring to its own code),
+and its outputs are exactly two things: hierarchy theorems (self-reference that
+bites, §7) and Rosser-style machines whose properties cannot be certified
+(§8.1). Neither touches the provability of the sentence itself. This is the
+general reason the §5 "prophetic independence" reading has nowhere to hook in.
+
+**8.1 Construction: a poly-time SAT algorithm whose correctness implies its own
+unprovability.** Fix `k`. By the recursion theorem build `M` which on input `x`:
+
+1. enumerates all ZFC-proofs of length ≤ log|x| (≤ |x| candidates — poly time,
+   no P=NP needed for this search);
+2. if one proves `Correct(M)` := "∀x, M(x) = SAT(x)", outputs UNSAT;
+3. otherwise runs Levin's `L` for |x|^k steps and outputs SAT iff a witness is
+   found.
+
+Then, formalizable in ZFC:
+
+- **ZFC ⊢ Correct(M) → ¬Prov_ZFC(Correct(M)).** If a proof exists, of length ℓ,
+  then for all |x| ≥ 2^ℓ M answers UNSAT; satisfiable formulas exist at every
+  large length, so M is incorrect. This is one direction of the Gödel fixed
+  point `G ↔ ¬Prov(G)` with "correct poly-time SAT decider" as the content
+  instead of "consistent".
+- **If ZFC is sound, ZFC ⊬ Correct(M)** — otherwise ZFC proves a falsehood.
+- Hence step 2 never fires and M behaves exactly like `M_k` (Levin clocked at
+  n^k). So **if P=NP, then for the right `k`, M is a correct polynomial-time SAT
+  algorithm whose correctness is true but ZFC-unprovable.** Correct(M) is Π⁰₁,
+  so this is a Gödel-shaped Π⁰₁ truth manufactured *by* P=NP.
+
+Limits, consistent with §7: the unprovability lands on a *witness*, not the
+question. ZFC could still prove P=NP outright (Σ⁰₂, possibly non-constructively)
+without proving any particular algorithm correct — ZFC ⊢ P=NP → ∃k Correct(M_k),
+but a proof of the ∃k yields no proof of any instance. The construction is
+folklore-shaped ("poly-time algorithms whose running time/correctness is
+unprovable" is standard); no canonical citation for this SAT-flavored version is
+known here — treat as an exercise, not a theorem to cite.
+
+**8.2 Where "hardness hides its own proof" is an actual theorem.** The
+*sentence* has no self-reference (§5), but the *proof space* does:
+
+- **Razborov (1995), "Unprovability of lower bounds on circuit size in certain
+  fragments of bounded arithmetic":** if strong pseudorandom generators exist,
+  then a relativized fragment of bounded arithmetic (S²₂(α) — recalled from
+  memory, verify the exact theory) cannot prove superpolynomial circuit lower
+  bounds for SAT. The natural-proofs barrier (Razborov–Rudich) is the
+  combinatorial shadow: a "natural" proof of hardness yields an algorithm
+  breaking the PRGs, partially refuting the very hardness it establishes. This
+  is the closest thing in the field to a GEB-style self-undermining structure,
+  and it is rigorous.
+- **Bounded arithmetic is where the independence program is actually alive.**
+  Nobody expects to show P vs NP independent of ZFC; the tractable question is
+  independence from PV / S¹₂ (theories whose provably total functions are
+  exactly the poly-time ones), where "ZFC ⊬" (§3, §4) becomes "PV ⊬" and
+  consistency-strength arguments become proof-complexity arguments. Cook–Krajíček
+  (2007), "Consequences of the provability of NP ⊆ P/poly", is the paper for the
+  opposite direction (provability of collapse has complexity consequences).
+
+**8.3 The finite Gödel sentence — the §7 "budget" observation is a research
+field.** Pudlák's **finite consistency statements** `Con_T(n)` := "there is no
+T-proof of 0=1 of length ≤ n". Each is Δ⁰₁, true, and trivially provable — the
+*only* question is the length of its shortest proof in T. Friedman–Pudlák lower
+bounds give n^Ω(1); whether polynomial upper bounds exist is open and, via
+Krajíček–Pudlák, tied to whether optimal propositional proof systems exist —
+i.e. to NP vs coNP. This is Gödel's second theorem with the budget `k` doing all
+the work, and the honest home for "self-reference meets P vs NP." Reference:
+Pudlák, "Incompleteness in the finite domain," Bull. Symbolic Logic 2017.
+
+**Verdict.** Three honest attachment points — witness (8.1), proof space (8.2),
+budget (8.3) — and none of them is the sentence. Each is real mathematics; none
+supports independence from ZFC. The §6/§7 verdict stands, with firmer anchors.
