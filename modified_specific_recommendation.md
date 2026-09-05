@@ -294,6 +294,15 @@ rather than claiming a separation. Assess this result before extending scope.
 
 ### Optional Extension: Full-Schema Target
 
+**Precheck (September 5, 2026):** see
+[gate_e_stretch_check.md](gate_e_stretch_check.md). The `Inc_c`/`CInc_c`
+schemata are in the squaring-stretch class; the conversion to the
+near-equal schema below is Jerabek's 2007 open question, whose
+relativization is refuted (JLC 2007, Corollary 3.6). Item 2 below is
+therefore not reachable by this project's relativizing constructions.
+The reachable form is 2b' (equivalence with `forall a sPHP^a_{a^2}(PV)`
+over `PV_1`, pending L2 in `PV_1`), of low novelty.
+
 Test the following equivalences over PV_1, using the exact schemata in
 Section 2:
 

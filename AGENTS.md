@@ -56,6 +56,11 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 - `gate_d_novelty.md` - focused novelty assessment: explicit RSW22
   conditional bridges, ILW23/CLOW26 separation machinery, source/version
   comparisons, bounded audit, and the stop-or-extension decision.
+- `gate_e_stretch_check.md` - precheck of the full-schema targets 2b/2c:
+  the incompressibility schemata sit in the squaring-stretch class, and
+  the step to APC₁'s near-equal (or ILW23's `n+1`) stretch is Jeřábek's
+  2007 open question, refuted relativized (JLC 2007, Cor. 3.6). Reachable
+  form 2b', the 2f-candidate, and the decision.
 
 ## Resume Here
 
@@ -66,10 +71,13 @@ Sections 3 and 5. The conditional separation T3' stands at paper level
 under the residual assumptions in `step2_conditional_separation.md`
 Section 5; its review cycle (Section 7) is closed. Novelty is not
 established. There is no pending task: any further work is a deliberately
-chosen extension (L2 inside PV₁, a full-schema equivalence, or the
-Liu–Pass audit), to be time-boxed and justified against RSW22/ILW23/CLOW26
-before starting. `step1_decoder.md` Section 5.3 is the Step 1 result
-ledger; the Step 0 ledger is historical. Nothing depends on chat history.
+chosen extension (L2 inside PV₁, the squaring-class characterization 2b',
+the 2f-candidate stretch separation, or the Liu–Pass audit), to be
+time-boxed and justified against RSW22/ILW23/CLOW26 before starting. The
+full-schema targets 2b/2c as written are closed by `gate_e_stretch_check.md`
+(the missing step is Jeřábek's open stretch question, false relativized).
+`step1_decoder.md` Section 5.3 is the Step 1 result ledger; the Step 0
+ledger is historical. Nothing depends on chat history.
 
 Lessons recorded from Steps 1-2: a reversal over `T_PV` suffices for a
 separation (nonprovability descends to subtheories), so an internal PV₁
