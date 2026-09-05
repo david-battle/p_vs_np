@@ -53,27 +53,40 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 - `check_step2.py` — finite checks of the Step 2 encoding, W1–W3 with the
   real evaluator, and the solver's control flow (`python3 check_step2.py`).
   Standard library only. Not a PV₁ proof.
+- `gate_d_novelty.md` - focused novelty assessment: explicit RSW22
+  conditional bridges, ILW23/CLOW26 separation machinery, source/version
+  comparisons, bounded audit, and the stop-or-extension decision.
 
 ## Resume Here
 
-Read `step2_conditional_separation.md` Sections 5, 7, and 8 first: the
-conditional separation T3' stands at paper level under the residual
-assumptions listed there, with both reviewers' concurrence after the
-corrections recorded in Section 7; the review cycle is closed. Novelty is
-unassessed. Next is the focused novelty check (Gate D) described in
-`step1_decoder.md` Section 6.8 ("After a successful transfer audit"),
-before any work on L2 inside PV₁. `step1_decoder.md` Section 5.3 remains
-the Step 1 result ledger; the Step 0 ledger is historical. Nothing
-depends on chat history.
+Read `gate_d_novelty.md` Sections 3, 5, and 6 first. Gate D's first-pass
+assessment and bounded independent source audit are complete: known
+separation machinery with an explicit incompressibility specialization;
+the exact arithmetic formulation was not located and novelty is not
+established. The recommendation is a coherent reconstruction endpoint.
+Next is the stop-or-explicit-extension decision in Section 5, not automatic
+L2-in-PV_1 work or another broad search.
+
+T3' remains accepted at paper level under the residual assumptions in
+`step2_conditional_separation.md` Section 5; its two-reviewer transfer
+review in Section 7 is closed. `step1_decoder.md` Section 5.3 remains
+the Step 1 result ledger; the Step 0 ledger is historical. Nothing depends
+on chat history.
 
 ## Operating norms
 
-- The assistant makes commits when asked; the user performs the final push
-  manually. Do not run `git push` (or the `push` alias) for this repo unless
-  explicitly asked to do so.
+- At the end of every round that changes tracked project files, verify and
+  commit that round's scoped changes without waiting for a separate request.
+  Do not create empty commits or include unrelated work.
+- The user performs the final push manually. Do not run `git push` (or the
+  `push` alias) for this repo unless explicitly asked to do so.
 - Default branch is `main`; remote is
   `https://github.com/david-battle/p_vs_np`.
 - Keep commits small and scoped to what was asked. Match the concise style of
   the sibling `immortal_kangaroo_sequence` repo.
 - Durable knowledge about this project belongs in this file or in the notes
   files, not duplicated across several documents.
+- Keep temporary working files inside this repository directory, not in
+  `/tmp` or another external directory. Exclude them locally through
+  `.git/info/exclude`, not tracked `.gitignore`; do not commit them or
+  mention their filenames in tracked notes or commit messages.

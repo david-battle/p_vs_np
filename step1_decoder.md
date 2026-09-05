@@ -5,9 +5,11 @@ F1/F2 are accepted; the original simulation/overhead task remains incomplete.
 T3's circuit-interface obligation is closed in
 [step2_conditional_separation.md](step2_conditional_separation.md) (concrete
 encoding, (E-a)/(E-b), audited transfer via ILW23 Theorems 25 and 28); the
-conditional separation stands under the residual assumptions listed there,
-novelty unassessed. Sections 6.7-6.8 record the Step 1 consensus; Section
-5.3 is the Step 1 result ledger.
+conditional separation stands under the residual assumptions listed there.
+Gate D's first-pass assessment is in [gate_d_novelty.md](gate_d_novelty.md):
+known machinery with an explicit incompressibility specialization, exact
+formulation unlocated, novelty not established. Sections 6.7-6.8 record the
+Step 1 consensus and updated handoff; Section 5.3 is the Step 1 result ledger.
 
 ## Work Record
 
@@ -700,7 +702,7 @@ simulation correctness enters is L2, i.e. the reversal.
 | T1: `T^0_APC proves Inc_c`, all c | Mathematical derivation with explicit true-universal lemmas for the specified runner; resource terms and E0/E0'/S0 re-reviewed in Section 6.1 | No machine-checked implementation |
 | T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | Mathematical derivation for the efficient-U/native-evaluator contracts; E, clock choice, and finite repair specified and re-reviewed (Section 6.1) | Nothing further at the T_PV level; PV_1 version is Step 2 |
 | Local EvalAvoid_4 implies native avoidance in T_PV | Explicit wrapper proof W1-W3 plus corrected zero-length repair | None at the T_PV level |
-| T3: conditional separation | Interface closed in [step2_conditional_separation.md](step2_conditional_separation.md): concrete encoding with (E-a), (E-b); transfer through ILW23 Theorems 25 and 28 directly (the paper's `Eval` and Theorem 24's statement are not used); audited | Novelty unassessed; residual assumptions listed in that note's Section 5 |
+| T3: conditional separation | Interface closed in [step2_conditional_separation.md](step2_conditional_separation.md): concrete encoding with (E-a), (E-b); transfer through ILW23 Theorems 25 and 28 directly (the paper's `Eval` and Theorem 24's statement are not used); audited | Residual assumptions in that note's Section 5; [Gate D](gate_d_novelty.md) assesses this as a reconstruction/specialization, novelty unestablished |
 | F1: `APC_1 proves Inc_c, CInc_c` | Accepted after concurrence review, relative to M1-M4 and the specified definitions (Sections 6.3-6.4); uses no property of the runners | Paper-level; not machine-checked |
 | F2: `UAPC_1 proves Inc_c` | Accepted after concurrence review, relative to M1-M4 and the first clause of D1a; uses E0', S0, A1-A4, C2, L0_c | Paper-level; not machine-checked |
 | `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 and the required circuit-interface facts in PV_1; L2 is the evaluator-specific instance of D4 (Section 6.6) |
@@ -708,8 +710,9 @@ simulation correctness enters is L2, i.e. the reversal.
 **Current endpoint:** outcome 1a accepted: F1/F2 are established at paper
 level under the specified definitions. The original simulation/overhead
 task remains incomplete; L2 is its evaluator-specific PV_1 obligation,
-not a prerequisite for the `T_PV` route. T3's interface is the next target,
-not an accepted separation. Sections 6.7-6.8 give the decision and handoff.
+not a prerequisite for the `T_PV` route. T3's interface was subsequently
+closed in Step 2, and Gate D's first-pass assessment is complete. Section
+6.8 points to the current stop-or-extension decision.
 
 ### 5.4 Finite checks performed
 
@@ -758,10 +761,10 @@ preimage checks are included in the saved script.
 
 ### 5.6 Next actions
 
-The forward-proof review is complete at paper level. Section 6.8 is the
-authoritative next-action list: close and audit the T3 interface first,
-then assess novelty before investing in internal simulation proofs. This
-supersedes the earlier suggestions to start L2-in-PV_1 or novelty work first.
+The forward-proof review and T3 interface review are complete at paper
+level. Gate D's first pass is also complete. Section 6.8 points to the
+current stop-or-explicit-extension decision; internal simulation proofs
+remain deferred, not an automatic next task.
 
 ## 6. Step 1 Finalization
 
@@ -1018,7 +1021,8 @@ satisfying (E-a), (E-b); independent audit of this reading; novelty.
   PV_1 theorem; depends on the encoding fixed under 6.5.
 - **Machine checking.** None of the above is machine-checked;
   `check_step1.py` remains a finite sanity check.
-- **Novelty.** Unassessed (Gate D).
+- **Novelty.** Gate D's first-pass assessment is complete in
+  [gate_d_novelty.md](gate_d_novelty.md); novelty is not established.
 
 ### 6.7 Accepted Step 1 outcome
 
@@ -1069,13 +1073,17 @@ in Section 5.4. It remains a sanity check, not the basis of the acceptance.
 *Done, September 5, 2026:* items 1-4 below are carried out in
 [step2_conditional_separation.md](step2_conditional_separation.md); the
 audit, Astra's concurrence corrections, and Fable 5.1's rebuttal review
-are recorded there in Section 7; the review cycle is closed. The
-paragraph "After a successful transfer audit" below now gives the
-research target: the focused novelty check.
+are recorded there in Section 7; the review cycle is closed. The subsequent
+focused novelty check and one bounded source-comparison audit are now in
+[gate_d_novelty.md](gate_d_novelty.md). Its Section 5 gives the current
+handoff: accept a reconstruction endpoint or deliberately select an
+extension. Novelty is not established; L2-in-PV_1 remains deferred.
+The original instructions below are retained as an execution record.
 
-**Next target: close the T3 circuit-interface obligation before attempting
-L2 inside PV_1.** This supersedes the earlier order "Gate D novelty first,
-then Gate C internal simulation". The agreed Step 1 status is now recorded;
+**Original transfer target (completed): close the T3 circuit-interface
+obligation before attempting L2 inside PV_1.** This superseded the earlier
+order "Gate D novelty first, then Gate C internal simulation". The agreed
+Step 1 status is now recorded;
 do not restart the forward proofs absent a concrete new counterexample.
 This handoff adds no new research or completed separation theorem.
 
@@ -1120,8 +1128,8 @@ Preserve these constraints during that pass:
   recorded in Step 0. Do not substitute weaker security or reinterpret
   infinitely-often agreement as agreement on isolated inputs.
 
-**After a successful transfer audit:** do a focused novelty check before
-investing in L2-in-PV_1. Suggested terms already identified are
+**Original Gate D target (first pass completed):** a focused novelty check
+after the transfer audit, before investing in L2-in-PV_1. Suggested terms are
 "conditional Kolmogorov complexity" / "auxiliary input" with "dual weak
 pigeonhole", "UAPC", and "parameter-free". A reconstruction of a known
 result is an acceptable endpoint. Full-schema equivalences, general

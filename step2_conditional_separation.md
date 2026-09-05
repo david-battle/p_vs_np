@@ -3,8 +3,10 @@
 **Status (September 5, 2026): T3 interface closed at paper level after
 audit, Astra's concurrence corrections, and Fable 5.1's rebuttal review
 (Section 7). Conditional separation T3' stands under the residual
-assumptions of Section 5 with both reviewers' concurrence. Novelty
-unassessed; Gate D is next.** This note fixes one concrete circuit
+assumptions of Section 5 with both reviewers' concurrence. Gate D's
+first-pass assessment is complete: known machinery with an explicit
+incompressibility specialization, novelty not established; see
+[gate_d_novelty.md](gate_d_novelty.md).** This note fixes one concrete circuit
 encoding for `(NativeCirc, NativeEval)`, verifies properties (E-a)/(E-b) of
 [step1_decoder.md](step1_decoder.md) Section 6.5 for it, and writes the
 explicit transfer from `T^0_APC proves NativeAvoid_4` to a contradiction
@@ -471,13 +473,14 @@ concurrence of both reviewers. Gate D may begin.
 | Concrete `(NativeCirc, NativeEval)` | Fixed (Section 2); PV, total, arbitrary description length | None |
 | (E-a), (E-b) | Established for the fixed encoding; (E-a) for other standard schemes via `code_S` | None at the `T_PV` level |
 | `T^0_APC` does not prove `NativeAvoid_4` | Derived from Theorem 25 + explicit solver + Theorem 28 under (H1), (H2), (P); audit, concurrence corrections, and rebuttal review in Section 7 | None at paper level |
-| T3' (`T^0_APC`, `UAPC_1`, `PV_1+{Inc_c}` do not prove `CInc_{c_0}`) | Derived from the above, T1, T2, and the wrapper; accepted by both reviewers after corrections | Novelty (Gate D) |
+| T3' (`T^0_APC`, `UAPC_1`, `PV_1+{Inc_c}` do not prove `CInc_{c_0}`) | Derived from the above, T1, T2, and the wrapper; accepted by both reviewers after corrections | Gate D assessment complete: reconstruction/specialization of known machinery; exact formulation unlocated, novelty unestablished |
 | Statement-level citation of Theorem 24 | Not used; would additionally need the paper's `Eval` identified | Optional |
 
 Not machine-checked; `check_step2.py` is a finite sanity check only.
 
-**Next:** the focused novelty check (Gate D), per `step1_decoder.md`
-Section 6.8, before any work on L2 inside PV_1. Suggested terms are
-listed there. A reconstruction of a known result is an acceptable
-endpoint. The review cycle for T3' is closed (Section 7); do not reopen
+**Next:** the stop-or-explicit-extension decision in
+[gate_d_novelty.md](gate_d_novelty.md) Section 5. Gate D's first pass and
+bounded source-comparison audit are complete; the recommendation is to
+accept a coherent reconstruction endpoint, not automatically begin L2
+inside PV_1. The review cycle for T3' is closed (Section 7); do not reopen
 it absent a concrete new counterexample.
