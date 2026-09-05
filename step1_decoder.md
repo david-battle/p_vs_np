@@ -1,5 +1,10 @@
 # Step 1: Definitions, Decoder Lemmas, and the T^0_APC Route
 
+**Current status (September 5, 2026): outcome 1a accepted at paper level.**
+F1/F2 are accepted; the original simulation/overhead task remains incomplete.
+T3 is not yet a signed-off separation. Start with Sections 6.7-6.8 for the
+consensus and the next-context handoff; Section 5.3 is the result ledger.
+
 ## Work Record
 
 Started 2026-09-05, 20:40 UTC (Fable 5.1, first pass on Step 1, following
@@ -29,6 +34,13 @@ standard metatheorems plus definition unfolding, isolating exactly what is
 not discharged; check the ILW23 interface against the paper's text; record
 the Gate B decision. Section 6 holds the result; the ledger in Section 5.3
 is updated in place.
+
+Astra concurrence review, September 5, 2026: no blocking error in F1/F2;
+accepted outcome 1a at ordinary paper-proof level, not completion of every
+original Step 1 task. A targeted basis/conservativity audit confirmed the
+same-language transfer and identified compressed arithmetic citations, not
+a stronger-theory gap. The following documentation-only handoff records
+that review and its recommendation without additional research.
 
 ## 0. Conventions
 
@@ -185,14 +197,14 @@ is a description of length at most `m`; `Sim_c(D,N) != X` says `U(str(D))`
 does not halt with output `str(X)` within `n^c` steps. Both sentences are
 `forall Sigma^b_2`. Write `Inc_c(N)` and `CInc_c(N,Z)` for the matrices.
 
-For circuits, use the **native** numeric circuit codes underlying the ILW23
-sentence, rather than choosing an unrelated gate encoding. Denote its total
-PV evaluator by `NativeEval(B,u)` and the PV characteristic predicate for
-its circuit quantifier by `NativeCirc(B,k,l)`. These are local names for the
-source interface, not claimed names of symbols printed by ILW23. Valid
-native circuits have unique input/output arities, and their evaluation on
-`u<2^k` is a number below `2^l`, representing the output with width l.
-Section 4.4 isolates exactly what is imported and what is proved here.
+For circuits, reserve `NativeEval(B,u)` for a total PV evaluator and
+`NativeCirc(B,k,l)` for its PV validity/arity predicate. Use the same pair
+throughout the simulation and wrapper arguments. These are local interface
+names, not claimed names of symbols printed by ILW23. Valid circuits have
+unique input/output arities; evaluation on `u<2^k` is below `2^l`, with
+output width l. ILW23 does not specify a bit-level code: choosing a concrete
+pair and checking its transfer to the source is still required, via
+Section 6.5's (E-a)/(E-b). The name "native" alone establishes no binding.
 
 The raw auxiliary string is `z_C=str(C)`. To supply native circuit number B
 to the machine, set `C=Wrap(B)`, so `z_C` is B's canonical binary word and
@@ -253,7 +265,8 @@ exists v < 2^n  forall u < 2^(n-1)   f(u[,z]) != v.
 
 These are universally closed quantifier-free PV matrices, with all terms
 defined in Section 0.2. Their truth follows from the displayed bit
-constructions; their derivations in PV_1 are still to be supplied.
+constructions; their paper-level PV_1 derivations are recorded in Section
+6.3 using standard `S^1_2` arithmetic and the conservativity theorem M1.
 
 ```text
 A1: |N|>=4 -> Short(N)<=A(N) and 2*A(N)=Pow(N).
@@ -397,15 +410,15 @@ Lemma L0_c, universally closed:
 |N|=4 and 1<=D<8 -> Sim_c(D,N)=0 and Sim_c(D,N)!=16.
 ```
 
-Its truth follows from the explicit malformed-description branch; the
-same branch gives a PV_1 proof once the runner's defining equations are
-installed. No large-clock computations or unknown witness numerals are
-required. For a different description syntax, the earlier seven-versus-
-sixteen finite-counting argument remains a fallback, not a needed premise.
+Its truth follows from the explicit malformed-description branch; Section
+6.2's defining requirement D1a supplies the PV_1 proof. No large-clock
+computations or unknown witness numerals are required. For a different
+description syntax, the earlier seven-versus-sixteen finite-counting
+argument remains a fallback, not a needed premise.
 
 ### 3.4 Theorem F2 (UAPC_1 proves Inc_c, each fixed c)
 
-Claim: `PV_1 + dWPHP'(f_c) proves Inc_c`, modulo E0', S0, A2-A4, C2, L0_c.
+Claim: `PV_1 + dWPHP'(f_c) proves Inc_c`, using E0', S0, A1-A4, C2, L0_c.
 
 Proof. Fix `N`, `n = |N| >= 4`. If `n = 4`, take `X := 16`; L0_c gives
 the required `forall D`. If `n >= 5`, instantiate `dWPHP'(f_c)` with
@@ -516,7 +529,7 @@ zero-length lemmas supply the other true universal sentences used below.
 
 ### 4.2 Theorem T1: `T^0_APC proves Inc_c` for every `c >= 1`
 
-Proof. Exactly the proof of F2, with E1, S0, A2-A4, L0_c, L1_c now axioms of
+Proof. Exactly the proof of F2, with E0', S0, A1-A4, L0_c, L1_c now axioms of
 `T_PV` and `dWPHP'(f_c)` an axiom of `T^0_APC`. Consequently
 `PV_1 + {Inc_c : c >= 1}` is a subtheory of `T^0_APC`.
 
@@ -593,13 +606,13 @@ Section 2.3, p. 8, supplies the length witness; Appendix D, p. 29, explicitly
 uses numeric interval representations of strings. Theorem 27's proof,
 p. 18, treats circuit-description length as the resource. These support
 the native interface used above, but the paper does not give a bit-level
-circuit code or name its validity predicate. The remaining import check is
-that `NativeCirc` describes exactly that circuit domain, with unique
-arities, and that `NativeEval` uses those fixed input/output widths. No
-bound `|B|<=m^k` may be introduced. This is a precise source-formalization
-obligation, not an extra cryptographic assumption or an arbitrary-coding
-equivalence. No separate gate representation needs to be invented here.
-Section 6.5 records the outcome of this check against the paper's text.
+circuit code or name its validity predicate. Section 6.5 therefore reduces
+the remaining import check to a concrete encoding, an efficient coding map,
+and a transfer argument for the source theorem, rather than a textual
+identification of unknown symbols. No bound `|B|<=m^k` may be introduced.
+This is a source-formalization obligation, not an extra cryptographic
+assumption or an assumed arbitrary-coding equivalence. A standard circuit
+representation suffices as a candidate; no novel representation is needed.
 
 Theorem T3 (subject to that source binding). Assume JLS-secure iO exists and
 `coNP` is not contained in `i.o.NP/poly`, as in ILW23 Theorem 24. Then
@@ -619,9 +632,10 @@ UAPC_1. The nonprovability descends to both subtheories.
 
 Status: the logical deduction and explicit wrapper implication are written
 out. The truth arguments for L0-L3 use the specified efficient-machine and
-native-evaluator contracts. The source binding is resolved in Section 6.5
-into the encoding properties (E-a), (E-b). PV_1 derivations of the
-reversal and certified concrete implementations have not been supplied.
+native-evaluator contracts. The source binding is reduced in Section 6.5
+to the encoding properties (E-a), (E-b), with the concrete choice and
+transfer still to sign off. PV_1 derivations of the reversal and certified
+concrete implementations have not been supplied.
 This is not an independently verified new separation, and nothing here has
 been checked for novelty.
 
@@ -630,7 +644,7 @@ incompressibility sentences, even all of them together over `PV_1`, do not
 yield conditional incompressibility at exponent `c_0`, under ILW23's
 hypotheses. It does not say anything about `PV_1` versus `UAPC_1`, and it
 does not use or establish any full-schema equivalence. The positive
-counterpart in APC_1 is F1, pending its listed PV_1 derivations; the
+counterpart in APC_1 is F1, accepted at paper level in Section 6.4; the
 counterpart over T_APC is established by the true-universal argument.
 
 ## 5. Status, Verification, and Handoff
@@ -666,7 +680,7 @@ confuse that implementation task with the existential metatheorem.
 | Theorem | PV_1 lemmas needed | Expected difficulty |
 | --- | --- | --- |
 | F1 (`APC_1 proves Inc_c, CInc_c`) | A1, A4, C1, defining equations | Encoding identities and definition unfolding. S0 and simulation correctness are not needed. |
-| F2 (`UAPC_1 proves Inc_c`) | E0/S0, A2-A4, C2, L0_c, defining equations | Canonical resource identity, bit arithmetic, and the explicit malformed-description branch. No large finite computations. |
+| F2 (`UAPC_1 proves Inc_c`) | E0/E0'/S0, A1-A4, C2, L0_c, defining equations | Canonical resource identity, bit arithmetic, and the explicit malformed-description branch. No large finite computations. |
 | `PV_1 + CInc_{c_0} proves EvalAvoid_4` | A5, A6, L2, L3 in PV_1 | The substantial additional obligation is proving the fixed-program simulation and clock bound of L2 inside PV_1. L3 has a constant bound on input width, not on circuit size. |
 | Local EvalAvoid implies the native sentence in PV_1 | E1, A4-A5, W1-W3, native evaluation contract, zero-length identity | T_PV already permits the true universal identities. Their PV_1 versions must be proved rather than imported from T_PV. |
 
@@ -683,15 +697,15 @@ simulation correctness enters is L2, i.e. the reversal.
 | T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | Mathematical derivation for the efficient-U/native-evaluator contracts; E, clock choice, and finite repair specified and re-reviewed (Section 6.1) | Nothing further at the T_PV level; PV_1 version is Step 2 |
 | Local EvalAvoid_4 implies native avoidance in T_PV | Explicit wrapper proof W1-W3 plus corrected zero-length repair | None at the T_PV level |
 | T3: conditional separation | Deduction from T1, T2, the wrapper, and ILW23 Theorem 24; the source interface is checked against the paper in Section 6.5 and, under our reading of the proof, reduces to properties (E-a), (E-b) of whatever `(NativeCirc, NativeEval)` is fixed | Fix one encoding with (E-a), (E-b); audit the 6.5 reading; novelty unassessed |
-| F1: `APC_1 proves Inc_c, CInc_c` | PV_1 derivation complete relative to M1-M4 of Section 6.2 (Sections 6.3-6.4); uses no property of the runners | Paper-level; not machine-checked |
-| F2: `UAPC_1 proves Inc_c` | PV_1 derivation complete relative to M1-M4 and the first clause of D1a; uses E0', S0, A1-A4, C2, L0_c (Sections 6.3-6.4) | Paper-level; not machine-checked |
-| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 in PV_1; this is the D4 simulation-bound obligation (Section 6.6) |
+| F1: `APC_1 proves Inc_c, CInc_c` | Accepted after concurrence review, relative to M1-M4 and the specified definitions (Sections 6.3-6.4); uses no property of the runners | Paper-level; not machine-checked |
+| F2: `UAPC_1 proves Inc_c` | Accepted after concurrence review, relative to M1-M4 and the first clause of D1a; uses E0', S0, A1-A4, C2, L0_c | Paper-level; not machine-checked |
+| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 and the required circuit-interface facts in PV_1; L2 is the evaluator-specific instance of D4 (Section 6.6) |
 
-**Current endpoint:** Step 1's forward theorems F1 and F2 are derived in
-PV_1 at paper level, with the metatheorems and the runner specification they
-rest on named explicitly (Section 6). The reversal L2 remains a T_PV-level
-truth argument; its PV_1 proof is the Step 2 obligation. See Section 6.7
-for the Gate B decision.
+**Current endpoint:** outcome 1a accepted: F1/F2 are established at paper
+level under the specified definitions. The original simulation/overhead
+task remains incomplete; L2 is its evaluator-specific PV_1 obligation,
+not a prerequisite for the `T_PV` route. T3's interface is the next target,
+not an accepted separation. Sections 6.7-6.8 give the decision and handoff.
 
 ### 5.4 Finite checks performed
 
@@ -708,9 +722,8 @@ abstract simulation check (417 C1 instances, 412 C2 instances), now through
 the canonical resource, and checks the literal bit terms on 4,096 resource
 values and 24,532 unary preimage/resource identities. It also checks
 invalid short pair descriptions, conditional decoding, the clock-exponent
-inequality,
-and the native/sentinel wrapper on small finite circuit tables. The
-zero-length cases remain as regressions: the old raw-bit expression is
+inequality, and the native/sentinel wrapper on small finite circuit tables.
+The zero-length cases remain as regressions: the old raw-bit expression is
 rejected and `5-Eval(C,1)` produces the correct encoded complement.
 
 The abstract simulator deliberately exercises more output behaviors than
@@ -731,37 +744,28 @@ L0 now has the constant witness 16 from pair syntax, rather than seven
 unspecified computations for every c. The literal PV term table and
 bounded quantifiers remove the earlier unrestricted-exponent metanotation.
 
-A bounded independent audit found no blocking mathematical error under
-the stated contracts. Its two status-wording findings were corrected:
-T2's large-length branch requires the added CInc sentence, and F1 is not
-yet a checked APC_1 proof. The audit does not discharge source binding or
-the remaining PV_1 obligations. Its expanded finite resource/preimage
-checks are included in the saved script, not left only in the transcript.
+A bounded independent audit of that earlier version found no blocking
+mathematical error under the stated contracts. Its two status-wording
+findings were corrected: T2's large-length branch requires the added CInc
+sentence, and F1 was not yet a checked APC_1 proof at that stage. Section
+6 now supersedes the latter status. That earlier audit did not discharge
+source binding or the PV_1 obligations. Its expanded finite resource/
+preimage checks are included in the saved script.
 
-### 5.6 Suggested next actions
+### 5.6 Next actions
 
-Items 1-2 of the earlier list (review of E0/S0, bit terms, W1-W3, clock
-choice, source binding; selection of the PV_1 basis and discharge of the
-F1/F2 obligations) are carried out in Section 6. What remains:
-
-1. Independent audit of Section 6, in particular the S^1_2-level
-   justifications in 6.3 and the encoding-robustness reading of ILW23 in
-   6.5. An auditor who disagrees with any 6.3 row should say which
-   BASIC-level fact they think is missing, not merely that the row is
-   "not formal".
-2. Step 2 / Gate C: formalize L2's fixed-program simulation and L3 in
-   PV_1 (Section 6.6). Keep this distinct from importing the negative
-   theorem and from any claim of novelty.
-3. Gate D: novelty check for the conditional separation T3 (search terms:
-   "conditional Kolmogorov complexity" / "auxiliary input" with
-   "dual weak pigeonhole", "UAPC", "parameter-free").
+The forward-proof review is complete at paper level. Section 6.8 is the
+authoritative next-action list: close and audit the T3 interface first,
+then assess novelty before investing in internal simulation proofs. This
+supersedes the earlier suggestions to start L2-in-PV_1 or novelty work first.
 
 ## 6. Step 1 Finalization
 
 ### 6.1 Review of the repaired definitions, L2, and W1-W3
 
-Parting-note items 1 and 2 were re-derived by hand, independently of the
-prose in Sections 0-4, with these results.
+The repaired resource definitions, evaluator clock, and wrapper were
+re-derived by hand, independently of the prose in Sections 0-4, with these
+results.
 
 - Term table (0.2): every row evaluates as stated, including the edge
   cases `Pow(0)=1`, `Ones(0)=0`, `Top(0)=0`, `Short(0)=2`, `Pad4(0)=0`,
@@ -801,15 +805,28 @@ Complexity* (2019), Chapter 12, and as used by PS21 and ILW23. Open PV
 formulas have PV characteristic functions, and definition by cases is
 available through `cond`. The derivations below use four standard facts.
 
+The concurrence review checked this presentation against Cook-Thapen,
+["The strength of replacement in weak arithmetic"](https://arxiv.org/pdf/cs/0409015),
+Section 1, arXiv p. 3 (published in ACM TOCL 7(4), 2006, pp. 749-764).
+Their first-order `PV` is the theory called `PV_1` here. In the full PV
+language, ordinary open IND is available; the theory also admits a
+universal axiomatization. The induction schemes themselves are not
+syntactically universal. Do not confuse this with arbitrary
+`Sigma^b_1`-IND or silently replace the base by a stronger theory.
+
 - **M1 (conservativity).** `PV_1` is contained in `S^1_2(PV)`, and
   `S^1_2(PV)` is `forall Sigma^b_1(PV)`-conservative over `PV_1` (Buss,
-  *Bounded Arithmetic*, 1986, via the witnessing theorem for `S^1_2`; the
-  statement in this form is standard, e.g. Cook-Thapen, "The strength of
-  replacement in weak arithmetic", 2006, Section 1). Every universally
+  *Bounded Arithmetic*, 1986, via the witnessing theorem for `S^1_2`). A
+  directly checked statement in the same PV language is
+  [PS21, Section 2.1, printed p. 7](https://users.ox.ac.uk/~coml0742/papers/stoc-final.pdf#page=7):
+  "S^1_2 is forall Sigma^b_1-conservative over PV_1." Every universally
   closed open PV sentence is `forall Sigma^b_1(PV)`. Hence any of the
   identities below that has an ordinary `S^1_2` proof, using BASIC and
   `Sigma^b_1`-LIND, is a `PV_1` theorem. M1 transfers provability, not
-  proof size; nothing here needs proof size.
+  proof size; nothing here needs proof size. It is applied only to the
+  open lemmas, not directly to `Inc_c`, `CInc_c`, or `EvalAvoid_4`, which
+  are `forall Sigma^b_2`. The PV symbols retain the same definitions on
+  both sides; semantic equality of arbitrary implementations is not enough.
 - **M2 (unfolding).** For `f(x)=cond(chi(x),s(x),t(x))` with `chi` the
   characteristic function of an open condition `phi`, `PV_1` proves
   `phi(x) -> f(x)=s(x)` and `not phi(x) -> f(x)=t(x)`. "Unfold" below means
@@ -822,7 +839,8 @@ available through `cond`. The derivations below use four standard facts.
   What `PV_1` knows about `Run_c` is its defining equations, and only D1a
   below is used.
 - **M4 (closed terms).** `PV_1` proves `t=n` for every closed term `t` and
-  the numeral `n` of its value. Used only for the finite case split in D1a.
+  the numeral `n` of its value. Used for the finite case split in D1a and
+  the closed length/bound facts at `n=4` in Section 6.4.
 
 **D1a (malformed branch; a definitional requirement).** `Run_c` and
 `CRun_c` are defined in the form `cond(Malformed(D), 0, ...)` and
@@ -868,14 +886,17 @@ over length terms, so `2^k` denotes a PV term such as `Pow`, `Short`,
 | A1, A2 | P3 with `floor(n/2)+1 <= n-1` for `n>=4`, `<= n-2` for `n>=5`; `2*A(N)=Pow(N)`, `2*H(N)=A(N)` by P3 halving. |
 | A3 | P4 with `x=D`, `k=m+1`, `j=n-2` gives the length and the bound; P5 with `q=2^(n-3-m)=Pow(MSP(N,m+3))` gives the `mod` identity; P3 for `|2(H+D)|=n`. |
 | A4 | P4 with `j=k=|N|`; converse from P2. |
-| A5, A6 | P3: `|Pad4(M)|=4|M|`, `Short(Pad4(M))=2^(2m+1)=2*Pow(M)^2`, `Pow(Pad4(M))=Pow(M)^4`; `2^m+1<=2^(4m)` for `m>=1`. |
+| A5, A6 | P2/P3 and elementary predecessor arithmetic give `|2^r-1|=r` for the resourced exponent `r=4|M|`, including `r=0` separately; hence `|Pad4(M)|=4|M|`. The `Short` definition and P5/P3 give `Short(Pad4(M))=2^(2m+1)=2*Pow(M)^2`; P3 gives `Pow(Pad4(M))=Pow(M)^4`. Elementary order arithmetic gives `2^m+1<=2^(4m)` for `m>=1`. |
 | S0 | E0 and the equality axioms applied to `Run_c(D,Ones(N))`. |
 | C1 | M2 on `CDec_c` at `u=D`: the condition `1<=D<Short(N) and Z>=1 and |CSim_c(D,Z,N)|=|N|+1` is literally the hypothesis list with `CSim_c(D,Z,N)=X`; the value is `X-Pow(N)`. `D<A(N)` is A1. Same for `Dec_c`. |
 | C2 | A2, A3 give `u_D=H(N)+D` with `|u_D|=n-1`, `u_D<A(N)`, `u_D mod Short(N)=D`, `|2u_D|=n`. M2 on `f_c` at `u_D`: `n'=n>=5`; `W=2u_D`; E0' gives `Short(W)=Short(N)` and `Pow(W)=Pow(N)`, so `D'=D!=0`; S0 gives `Sim_c(D,W)=Sim_c(D,N)=X`; `|X|=n+1` selects the branch returning `X-Pow(N)`. |
 | L0_c | `1<=D<8 -> D<16`, D1a, `0!=16`. |
 
-Every row is a finite chain of unfoldings and instances of P1-P5. Nothing
-in the table is a claim about U, about circuits, or about proof size.
+This is a compressed paper-proof reduction table using P1-P5, the named
+definitions, and elementary order/floor/predecessor arithmetic, not an
+exhaustive formal derivation from the five displayed lines alone. The
+concurrence review found no stronger-induction or lost-resource gap.
+No universal-simulation correctness or circuit theorem is used here.
 
 ### 6.4 Theorems F1 and F2 in PV_1
 
@@ -896,11 +917,13 @@ F2:  PV_1 + dWPHP'(f_c)   proves Inc_c.
 ```
 
 Status: **derived in PV_1 at paper level**, relative to M1-M4 and the
-definitional requirement D1a. "Paper level" means each step is either a
-named standard metatheorem, an instance of P1-P5, or a definition
-unfolding; no step is labelled "routine" without its reduction being
-written. Not machine-checked. Consequently `UAPC_1` proves every `Inc_c`
-and `APC_1` proves every `Inc_c` and `CInc_c`: plan outcome **1a**.
+definitional requirement D1a. "Paper level" means the explicit logical
+arguments rest on named metatheorems, standard bit arithmetic as detailed
+in Section 6.3, and definition unfolding; it does not mean every elementary
+step is expanded into an axiom-by-axiom derivation. Not machine-checked.
+Astra's concurrence review accepted F1/F2 on this basis. Consequently
+`UAPC_1` proves every `Inc_c` and `APC_1` proves every `Inc_c` and `CInc_c`:
+plan outcome **1a**, for each fixed standard `c>=1`.
 
 ### 6.5 The ILW23 interface, checked against the text
 
@@ -935,13 +958,20 @@ statement about Boolean circuits given by some description, and its
 reduction feeds constructed circuits to the AVOID solver *as codes*. So
 transferring Theorem 28 to a different encoding needs a polynomial-time
 map from standard descriptions into that encoding; existence of codes and
-size-relatedness alone do not suffice. (A counterexample was found in
-audit: pair each gate list with a string `y` outside its range and let
-`NativeEval` avoid `y` by construction; every circuit then has a code of
-related size, yet `PV_1` proves the avoidance sentence for that pair,
-because producing the code *is* AVOID.) Consequently (this is our reading
-of the proof, not a sentence in the paper) Theorem 24 holds verbatim for
-any fixed PV pair `(NativeCirc, NativeEval)` with:
+size-relatedness alone do not suffice.
+
+The earlier audit's counterexample illustrates the distinction. Accept
+syntactically valid pairs `(G,y)`, with y an l-bit value, and evaluate G
+except that an output equal to y has its low bit flipped. Every such code
+avoids its stored y, provably in PV_1. For `l>k`, every standard `k->l`
+circuit nevertheless has a semantics-preserving code: choose y outside
+its range. Existence of that choice does not supply an efficient coding
+map. Importantly, validity does not test whether y is outside the range;
+that would not be the promised PV syntax check.
+
+Consequently (this is our reading of the proof, not a sentence in the
+paper) Theorem 24 holds for any fixed PV pair `(NativeCirc, NativeEval)`
+with:
 
 ```text
 (E-a) there is a PV function code(G) such that for every standard gate
@@ -970,13 +1000,13 @@ satisfying (E-a), (E-b); independent audit of this reading; novelty.
 
 ### 6.6 What is not discharged
 
-- **D4 / L2 in PV_1.** The fixed-program simulation correctness and clock
-  bound for E. This is the one place simulation correctness enters, and
-  it is needed only for the positive reversal
-  `PV_1 + CInc_{c_0} proves EvalAvoid_4`, not for T1-T3. It is the plan's
-  Step 1 task 4 / Gate B "simulation bounds" item and the first Step 2
-  target. Its truth argument is L2's; its PV_1 proof would formalize
-  U's step relation for the fixed program E.
+- **D4 / L2 in PV_1.** The original Step 1 task 4 asks for correctness and
+  overhead proofs for fixed PV algorithms in general; it remains
+  incomplete. L2 is the evaluator-specific instance, needed for the
+  positive reversal `PV_1 + CInc_{c_0} proves EvalAvoid_4`. T2/T3 need
+  L2's mathematical truth under the efficient-U contract, but not a PV_1
+  proof of it. Its internal proof would formalize U's step relation for E.
+  This is deferred work, not the next-context target.
 - **L3 in PV_1.** Finite counting over `2^k+1` candidates for the constant
   range `1<=k<M_0`; elementary but not written.
 - **W1-W3 and the zero-length identity in PV_1.** Straightforward from E1,
@@ -986,17 +1016,109 @@ satisfying (E-a), (E-b); independent audit of this reading; novelty.
   `check_step1.py` remains a finite sanity check.
 - **Novelty.** Unassessed (Gate D).
 
-### 6.7 Gate B decision
+### 6.7 Accepted Step 1 outcome
 
-Gate B's exit deliverable is "checked PV definitions and proofs, with any
-remaining gap isolated". Decision: **Gate B is passed for the forward
-direction (outcome 1a) at paper level**, and the simulation-bound part of
-Gate B is **isolated, not passed**: L2 has a T_PV-level truth argument and
-an explicit PV_1 obligation (6.6), and nothing in T1-T3 depends on it.
+Fable's finalization and Astra's concurrence review converge on this
+status, recorded September 5, 2026:
 
-Recommended order: Gate D first (independent audit of Section 6, fixing a
-concrete encoding for (E-a), (E-b), and the novelty check for T3), because
-T3 now has both bridges at the T_PV level with the source interface
-reduced to a specification, and a cheap novelty check may change what is
-worth formalizing; then Gate C with L2-in-PV_1 as the target lemma and a
-fresh time cap.
+> Step 1 outcome 1a accepted: the parameterized and unary decoder forward
+> proofs are complete at ordinary paper-proof level. The internal
+> simulation/overhead obligation is explicitly deferred and remains
+> incomplete. No completed reversal, separation, or novelty claim is
+> included in this acceptance.
+
+For every fixed standard `c>=1`, under the definitions of this note:
+
+```text
+UAPC_1 proves Inc_c;
+APC_1  proves Inc_c and CInc_c.
+```
+
+Gate B's forward-proof deliverable is therefore accepted, not merely
+"expected routine". This is not a claim that every original Gate B task
+has passed. The proofs apply to fixed realizations of the stated runner
+definitions; they do not certify a particular transition table. A
+proof-assistant implementation is not a prerequisite for this paper-level
+acceptance. No blocking F1/F2 error was found in the concurrence review;
+the targeted basis audit confirmed M1-M4 and the resource arithmetic.
+
+Keep the following distinctions when resuming:
+
+- F1 uses the same simulation symbol in the decoder and target; it needs
+  no property of the runner. F2 additionally uses normalization through
+  `Ones`, E0', and the short-description rejection branch D1a.
+- Conservativity transfers the open correctness lemmas only. The
+  incompressibility arguments then use first-order logic plus the chosen
+  pigeonhole axiom over PV_1; no `forall Sigma^b_2` transfer is claimed.
+- The circuit-coding question does not reopen outcome 1a. It belongs to
+  T3's import, which remains to sign off. Mathematical truth of L2 is
+  required there; an internal PV_1 proof of L2 is not.
+- The numerical value of c_0 and a certified concrete U remain unspecified.
+  The current route is an existence argument for a fixed standard exponent
+  under the efficient-machine contract, not a claim about arbitrary U.
+
+The finite script was rerun during concurrence and passed with the counts
+in Section 5.4. It remains a sanity check, not the basis of the acceptance.
+
+### 6.8 Next-context handoff
+
+**Next target: close the T3 circuit-interface obligation before attempting
+L2 inside PV_1.** This supersedes the earlier order "Gate D novelty first,
+then Gate C internal simulation". The agreed Step 1 status is now recorded;
+do not restart the forward proofs absent a concrete new counterexample.
+This handoff adds no new research or completed separation theorem.
+
+Read Sections 6.7, 6.5, and 4 first. The source conventions and exact
+external hypotheses are in [step0_baseline.md](step0_baseline.md), Section
+4; its older implication ledger is a historical Step 0 snapshot, not the
+current proof status. The modified plan remains the scope/outcome guide.
+These tracked notes are sufficient to resume; no prior chat or temporary
+source extraction is required.
+
+**Bounded attempt:** record the target and a 60-90 minute cap at the start;
+allow one bounded independent audit after the write-up. Work in this order:
+
+1. Fix a concrete standard circuit representation, total PV evaluator,
+   and validity/arity predicate for `NativeCirc`/`NativeEval`. Specify
+   malformed codes and widths, including the zero-input case. There is
+   no need to invent a novel encoding or a new universal machine.
+2. Establish (E-a)/(E-b) for that choice. Exhibit the efficient map
+   `code(G)`, not just the existence of polynomial-size codes. Check its
+   arities and semantics against standard circuit evaluation and retain
+   the same evaluator in W1-W3, E, L2, L3, and the avoidance sentence.
+3. Write the explicit transfer to ILW23's negative result, using the
+   Section 6.5 analysis of Theorems 25, 27, and 28 behind Theorem 24.
+   Audit resource bounds and quantifiers, not just the informal claim
+   that encodings are equivalent. Only a signed-off transfer closes T3.
+4. Independently audit the resulting `T_PV` route with the existing
+   efficient-U contract. If it passes, consolidate a conditional-separation
+   note with the exact ILW23 hypotheses and novelty unassessed. If it
+   fails or the cap expires, preserve the strongest checked result and
+   identify one precise remaining obligation; do not upgrade the status.
+
+Preserve these constraints during that pass:
+
+- Circuit descriptions have arbitrary length; never add `|B|<=m^k`.
+  Keep the length witness M and the resources of Section 0.2 available.
+- Auxiliary input is raw `str(C)` with `C=Wrap(B)`. The deadline at
+  `N=Pad4(M)` is exactly `(4m+|C|)^c_0`; the sentinel is added only by
+  the bounded simulation wrapper, not written by E.
+- Retain `M_0=2|E|+2`, the constant-small-length repair L3, and the
+  zero-length stretch `ell_*(m)=max(1,4m)` with witness `5-Eval(C,1)`.
+- Use JLS-secure iO and `coNP not contained in i.o.NP/poly`, exactly as
+  recorded in Step 0. Do not substitute weaker security or reinterpret
+  infinitely-often agreement as agreement on isolated inputs.
+
+**After a successful transfer audit:** do a focused novelty check before
+investing in L2-in-PV_1. Suggested terms already identified are
+"conditional Kolmogorov complexity" / "auxiliary input" with "dual weak
+pigeonhole", "UAPC", and "parameter-free". A reconstruction of a known
+result is an acceptable endpoint. Full-schema equivalences, general
+universal-machine formalization, and Liu-Pass remain deferred.
+
+**Verification:** run `python3 check_step1.py` for regression checks and
+`git diff --check` for edits. Review the mathematical transfer separately;
+the script does not implement U or the source circuit encoding. Record
+the new result and audit in this note (or a scoped Step 2 proof note with
+a pointer here), update the ledger, and preserve the distinction between
+truth in `T_PV`, provability in PV_1, and novelty.

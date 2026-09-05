@@ -11,8 +11,11 @@ Limits for this pass: 60 minutes; three bounded source-extraction tasks and
 one independent write-up audit; no exhaustive novelty search. No paid
 external services, outreach, or publication are part of this pass.
 
-Status: Gate A's research deliverables are complete (outcome 0b); proceed
-to Step 1.
+Step 0 endpoint: Gate A's research deliverables are complete (outcome 0b).
+The implication ledger and Gate A handoff below record that historical
+stage. For subsequent proof status and the current next action, use
+[step1_decoder.md](step1_decoder.md), Sections 5.3 and 6.7-6.8; do not treat
+the older "proof to reconstruct" rows as the current Step 1 verdict.
 
 ## 1. Source Table
 

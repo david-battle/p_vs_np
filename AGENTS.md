@@ -46,6 +46,14 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 - `check_step1.py` — finite sanity checks for Step 1 (`python3
   check_step1.py`); standard library only. Not a PV₁ proof.
 
+## Resume Here
+
+Read `step1_decoder.md` Sections 6.7-6.8 first: they hold the accepted
+Step 1 outcome and the next-context handoff. Then read Sections 6.5 and 4
+for the remaining T3 interface work. Use its Section 5.3 as the current
+result ledger; the Step 0 ledger is historical. The handoff supersedes
+earlier next-action lists and does not depend on chat history.
+
 ## Operating norms
 
 - The assistant makes commits when asked; the user performs the final push

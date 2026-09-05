@@ -143,6 +143,16 @@ proceed with the missing implication identified as precisely as possible.
 
 ## 4. Step 1: Fix the Definitions and Prove the Decoder Lemmas
 
+**Execution update (September 5, 2026):** outcome **1a accepted at paper
+level** after finalization and concurrence review. The parameterized and
+unary decoder forward proofs are established under the definitions in
+[step1_decoder.md](step1_decoder.md). Task 4 below (internal simulation and
+overhead proofs) remains incomplete; this is not an unqualified completion
+of all Gate B tasks. Sections 6.7-6.8 of that note give the authoritative
+consensus and next action: close and audit the T3 circuit interface via
+the `T_PV` route before novelty work or L2-in-PV_1. No separation or novelty
+claim is included in the accepted Step 1 outcome.
+
 ### Definitions
 
 Fix a concrete efficient universal machine U with two-part descriptions of a
@@ -342,8 +352,10 @@ fit the chosen theory and remaining budget.
 
 ## 7. Execution and Decision Points
 
-Work in this order; the optional extensions are choices, not prerequisites
-for completing the initial project.
+The table describes the original gate structure; use the current handoff
+in [step1_decoder.md](step1_decoder.md), Sections 6.7-6.8, for the immediate
+execution order and deferred obligations. The optional extensions remain
+choices, not prerequisites for completing the initial project.
 
 | Gate | Next Action | Exit Deliverable |
 | --- | --- | --- |
