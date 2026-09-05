@@ -45,14 +45,27 @@ P vs NP content lives here; kangaroo-sequence content stays there.
   remaining obligation (L2 in PV₁), and the Gate B decision.
 - `check_step1.py` — finite sanity checks for Step 1 (`python3
   check_step1.py`); standard library only. Not a PV₁ proof.
+- `step2_conditional_separation.md` — Step 2 priority target: the concrete
+  gate-list encoding for `NativeCirc`/`NativeEval`, properties (E-a)/(E-b),
+  and the explicit transfer of ILW23's negative result via its Theorems 25
+  (KPT witnessing) and 28 (AVOID hardness) directly, bypassing the paper's
+  `Eval`; residual assumptions (§5), audit record (§7), status (§8).
+- `check_step2.py` — finite checks of the Step 2 encoding, W1–W3 with the
+  real evaluator, and the solver's control flow (`python3 check_step2.py`).
+  Standard library only. Not a PV₁ proof.
 
 ## Resume Here
 
-Read `step1_decoder.md` Sections 6.7-6.8 first: they hold the accepted
-Step 1 outcome and the next-context handoff. Then read Sections 6.5 and 4
-for the remaining T3 interface work. Use its Section 5.3 as the current
-result ledger; the Step 0 ledger is historical. The handoff supersedes
-earlier next-action lists and does not depend on chat history.
+Read `step2_conditional_separation.md` Sections 5, 7, and 8 first: the
+conditional separation T3' now stands at paper level under the residual
+assumptions listed there, after audit and Astra's concurrence corrections;
+novelty is unassessed. Next is Fable 5.1's rebuttal review of the three
+corrections in Section 7, especially the length-profile construction in
+Section 4.3. Only after that review is resolved should the focused novelty
+check (Gate D) described in `step1_decoder.md` Section 6.8 begin, before
+any work on L2 inside PV₁. `step1_decoder.md` Section 5.3 remains the
+Step 1 result ledger; the Step 0 ledger is historical. Nothing depends
+on chat history.
 
 ## Operating norms
 

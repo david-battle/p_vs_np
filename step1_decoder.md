@@ -2,8 +2,12 @@
 
 **Current status (September 5, 2026): outcome 1a accepted at paper level.**
 F1/F2 are accepted; the original simulation/overhead task remains incomplete.
-T3 is not yet a signed-off separation. Start with Sections 6.7-6.8 for the
-consensus and the next-context handoff; Section 5.3 is the result ledger.
+T3's circuit-interface obligation is closed in
+[step2_conditional_separation.md](step2_conditional_separation.md) (concrete
+encoding, (E-a)/(E-b), audited transfer via ILW23 Theorems 25 and 28); the
+conditional separation stands under the residual assumptions listed there,
+novelty unassessed. Sections 6.7-6.8 record the Step 1 consensus; Section
+5.3 is the Step 1 result ledger.
 
 ## Work Record
 
@@ -696,7 +700,7 @@ simulation correctness enters is L2, i.e. the reversal.
 | T1: `T^0_APC proves Inc_c`, all c | Mathematical derivation with explicit true-universal lemmas for the specified runner; resource terms and E0/E0'/S0 re-reviewed in Section 6.1 | No machine-checked implementation |
 | T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | Mathematical derivation for the efficient-U/native-evaluator contracts; E, clock choice, and finite repair specified and re-reviewed (Section 6.1) | Nothing further at the T_PV level; PV_1 version is Step 2 |
 | Local EvalAvoid_4 implies native avoidance in T_PV | Explicit wrapper proof W1-W3 plus corrected zero-length repair | None at the T_PV level |
-| T3: conditional separation | Deduction from T1, T2, the wrapper, and ILW23 Theorem 24; the source interface is checked against the paper in Section 6.5 and, under our reading of the proof, reduces to properties (E-a), (E-b) of whatever `(NativeCirc, NativeEval)` is fixed | Fix one encoding with (E-a), (E-b); audit the 6.5 reading; novelty unassessed |
+| T3: conditional separation | Interface closed in [step2_conditional_separation.md](step2_conditional_separation.md): concrete encoding with (E-a), (E-b); transfer through ILW23 Theorems 25 and 28 directly (the paper's `Eval` and Theorem 24's statement are not used); audited | Novelty unassessed; residual assumptions listed in that note's Section 5 |
 | F1: `APC_1 proves Inc_c, CInc_c` | Accepted after concurrence review, relative to M1-M4 and the specified definitions (Sections 6.3-6.4); uses no property of the runners | Paper-level; not machine-checked |
 | F2: `UAPC_1 proves Inc_c` | Accepted after concurrence review, relative to M1-M4 and the first clause of D1a; uses E0', S0, A1-A4, C2, L0_c | Paper-level; not machine-checked |
 | `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 and the required circuit-interface facts in PV_1; L2 is the evaluator-specific instance of D4 (Section 6.6) |
@@ -1061,6 +1065,13 @@ The finite script was rerun during concurrence and passed with the counts
 in Section 5.4. It remains a sanity check, not the basis of the acceptance.
 
 ### 6.8 Next-context handoff
+
+*Done, September 5, 2026:* items 1-4 below are carried out in
+[step2_conditional_separation.md](step2_conditional_separation.md); the
+audit and Astra's concurrence corrections are recorded there in Section
+7. Fable 5.1's rebuttal review is next; once resolved, the paragraph
+"After a successful transfer audit" below gives the research target:
+the focused novelty check.
 
 **Next target: close the T3 circuit-interface obligation before attempting
 L2 inside PV_1.** This supersedes the earlier order "Gate D novelty first,
