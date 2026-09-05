@@ -203,13 +203,32 @@ bounds, and the chosen size-resource construction in PV_1.
 
 The parameter-free case requires an additional construction. The numeric
 value of `0^m1` is always 1, so the padded code by itself cannot tell a unary
-function which n was intended. An outer length-preserving prefix or another
-explicit encoding is needed. Account for its bit cost and for the entire
-initial interval `[0,a)`, not just a fixed-length slice. Separate fixed
-functions for even and odd output lengths are permitted; passing n, the
-length witness, or the clock as an extra argument is not. Korten's uniform
-circuit constructor does not by itself solve this parameter-elimination
-problem.
+function which n was intended. Passing n, the length witness, or the clock as
+an extra argument is not allowed. Korten's uniform circuit constructor does
+not by itself solve this parameter-elimination problem.
+
+**Proposed unary layout (Fable 5.1 amendment, not yet checked in PV_1).**
+Recover n from the bit length of u. For `u` with `|u| = n-1`, i.e.
+`2^(n-2) <= u < 2^(n-1)`:
+
+```text
+u = 1 || (n-3-m ignored bits) || 0^(m-|d|) 1 d,     n := |u|+1,  m = floor(n/2)
+
+f(u):
+  n := |u|+1; if n < 5, return 0;
+  read the low m+1 bits as the padded code; if all zero, return 0;
+  recover d, run U(d) for n^c steps;
+  if it halts with exactly n output bits, return their value; else 0.
+```
+
+The code field fits iff `m+1 <= n-2`, which holds for all `n >= 5` and
+fails at `n = 4` (field 3, room 2). Inputs of other lengths map to 0 and are
+harmless, since only coverage of compressible outputs matters. `Inc_c(4)` is
+a single closed true sentence (7 descriptions, 16 candidate strings) and is
+provable in PV_1 by finite evaluation. So the unary decoder has cutoff 5 with
+n = 4 as a finite case; no even/odd split is needed. Coverage with
+`a = 2^(n-1), b = 1`: every short halting description d has
+`u_d = 2^(n-2) + code(d) < 2^(n-1)` and `f(u_d) = val(x)`.
 
 ## 4. Exact Pigeonhole and Eval Imports
 
@@ -236,6 +255,11 @@ Keep the following distinctions explicit:
   string schema; its Section 4.3 uses the near-equal **parameter-free**
   interval schema. We import that base and its exact Eval nonprovability,
   not an unproved identification of every APC/stretch presentation over PV_1.
+- ILW23 footnote 14 (p. 16) asserts that the near-equal `dWPHP'(f)` implies
+  the string version `dWPHP'_ell(f)` for every `ell(n) >= n+1` "in any
+  reasonable base theory". This is a footnote claim, not a numbered theorem;
+  our forward instance with `b = 1` uses the schema directly and does not
+  depend on it.
 
 For positive m, write the required fixed-stretch sentence as
 
@@ -317,13 +341,56 @@ or matching source has been established here.
 | `UAPC_1 proves Inc_c`, each fixed c | `proof to reconstruct` | Genuinely unary decoder, including prefix costs and initial-interval coverage |
 | `PV_1 + CInc_c proves EvalAvoid_4`, for one sufficiently large fixed c | `proof to reconstruct` | Evaluator description, uniform clock, validity guard, finite-length repair, and source coding bridge |
 | Under ILW23 hypotheses, `T^0_APC` does not prove the specified Eval sentence | `cited theorem` | Apply Thm. 24 with positive-length 4m and the zero-length convention recorded above |
-| Under ILW23 hypotheses, `PV_1 + {Inc_c}` does not prove the chosen CInc_c | `unresolved` | Complete both the UAPC_1 forward bridge and the Eval reversal, then transfer nonprovability |
+| Under ILW23 hypotheses, `PV_1 + {Inc_c}` does not prove the chosen CInc_c, via `T^0_APC` | `proof to reconstruct` | Section 5a shortcut: define the unary decoder and evaluator description; correctness lemmas are true universal sentences, hence axioms of `T_PV`; then apply Thm. 24 |
+| Same conclusion with the bridges proved inside PV_1 (`UAPC_1 proves Inc_c`; `PV_1 + CInc_c proves EvalAvoid_4`) | `proof to reconstruct` | The rows above; needed for the positive characterizations, not for the separation itself |
 | Full Inc/dWPHP' and CInc/dWPHP equivalences over PV_1 | `unresolved` | Full-schema reversals and precise stretch conversions; deferred, not prerequisites |
 
 Here `Inc_c` and `CInc_c` in theory assertions mean the length-universal
 sentences with cutoff 4. The unconditional schema has a separate sentence
 for each standard c; the priority negative target is one conditional
 sentence for a fixed c, not merely failure to prove the entire schema.
+
+### 5a. Weaker-Base Shortcut to the Conditional Separation
+
+Fable 5.1 amendment; own reasoning, not a source theorem, and not yet
+independently checked. The plan's priority conclusion is
+
+```text
+PV_1 + {Inc_c : c >= 1}  does not prove  CInc_{c0}   (under ILW23's hypotheses)
+```
+
+for one fixed c0. This does not require the bridges to be proved inside
+PV_1. It suffices that:
+
+1. `T^0_APC proves Inc_c` for every c, so `PV_1 + {Inc_c}` is a subtheory
+   of `T^0_APC`;
+2. `T^0_APC + CInc_{c0} proves EvalAvoid_4`;
+3. `T^0_APC does not prove EvalAvoid_4` (Thm. 24 with `ell_* = max(1,4m)`).
+
+Then (2) and (3) give `T^0_APC does not prove CInc_{c0}`, and (1) transfers
+this down to `PV_1 + {Inc_c}`.
+
+Since `T_PV` contains every true universal PV sentence, the correctness
+lemmas behind (1) and (2) are axioms of `T^0_APC` rather than proof
+obligations, provided they have the form `forall (quantifier-free)` with
+PV-decidable matrix and are true in N. Concretely:
+
+- For (1): `forall N, d, x: (|d| <= m and Halt_c(d, x, n^c)) -> (u_d < 2^(n-1)
+  and f(u_d) = val(x))` for the Section 3 unary f. What remains is to
+  *define* f as a PV function and instantiate `dWPHP'(f)` with
+  `a = 2^(n-1), b = 1`; the n = 4 case is a closed true sentence.
+- For (2): `forall m, C, x': (valid(C) and |x'| = m) -> Halt_{c0}(pair(E,x'),
+  C(x'), 4m, C)` for a fixed evaluator E and one clock exponent c0 covering
+  evaluation plus universal simulation, and, for each fixed `m < M`, the
+  universal correctness of a brute-force PV function returning a string
+  outside the range of C. What remains is to define E, choose c0 and M, and
+  fix the circuit validity predicate and evaluator.
+
+The `PV_1`-internal proofs (D1, D2, D4 below) remain necessary for the
+positive statements `UAPC_1 proves Inc_c` and `PV_1 + CInc_c proves
+EvalAvoid_4`, and for any later equivalence. They are not needed for outcome
+2g. This reorders Step 1: the cheapest first milestone is (1) and (2) over
+`T^0_APC`, then upgrading the bridges to PV_1.
 
 ## 6. Gate A Decision and Handoff
 
@@ -344,10 +411,11 @@ Step 1 should produce these obligations in order:
    PV function and prove the explicit preimage implication for every short
    successful description. Instantiate the displayed doubling interval to
    obtain the APC_1 forward sentences.
-3. **D3: unary decoder.** Remove all variable length/clock/advice arguments
-   for ordinary Inc; prove the precise numeric interval instance including
-   lower input-length slices and any finite exceptions. This is the first
-   bridge needed for the priority separation.
+3. **D3: unary decoder.** Define the Section 3 unary layout as a PV function
+   (cutoff 5, n = 4 finite) and prove the precise numeric interval instance
+   including lower input-length slices. For the Section 5a shortcut only the
+   definition and the truth of its correctness lemmas are needed; for
+   `UAPC_1 proves Inc_c` the lemmas must be proved in PV_1.
 4. **D4: fixed-program simulation.** Prove additive description overhead and
    uniform polynomial simulation bounds, specializing to the evaluator as
    preparation for Section 4's Step 2 reversal.
@@ -355,7 +423,8 @@ Step 1 should produce these obligations in order:
 There is no completed Step 1 proof in this note. In particular, neither
 hard-function existence nor ordinary counting substitutes for D3. If an
 argument only works over S^1_2 or T_PV, record that fact instead of silently
-promoting it to a PV_1 proof.
+promoting it to a PV_1 proof; Section 5a is deliberately such a `T_PV`-level
+argument and is labelled as one.
 
 Step 0 items 4-5 remain deferred until a specific reversal/stretch question
 requires them; item 6 remains deferred until before Step 3. Exhaustive
