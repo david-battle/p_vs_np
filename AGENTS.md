@@ -17,6 +17,17 @@ P vs NP content lives here; kangaroo-sequence content stays there.
   construction, and where self-reference can honestly attach (witness, proof
   space, budget). Includes the AC framing (kangaroo as "for" example,
   Vitali/Banach–Tarski as "against") that motivated it.
+- `recommendation.md` — which research direction from the notes to pursue:
+  bounded-arithmetic (un)provability of lower bounds (Krajíček → Pich–Santhanam
+  → Chen–Li–Oliveira 2024), and why not the others.
+- `detailed_recommendation.md` — candidate "favorite lower bounds" for a
+  CLO24-style equivalence with a pigeonhole principle, with later corrections
+  (items #1 and #2 are largely Jeřábek 2004; the residue is over PV₁).
+- `specific_recommendation.md` — standalone plan for the K^t-incompressibility
+  problem: literature check, formal statement, target theorem (parameter-free
+  vs parameterized dWPHP as unconditional vs conditional K^t), then
+  formalizing Liu–Pass in APC₁. Intentionally self-contained; it does not
+  reference the other files here.
 
 ## Operating norms
 
