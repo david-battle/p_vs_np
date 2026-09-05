@@ -28,6 +28,18 @@ P vs NP content lives here; kangaroo-sequence content stays there.
   vs parameterized dWPHP as unconditional vs conditional K^t), then
   formalizing Liu–Pass in APC₁. Intentionally self-contained; it does not
   reference the other files here.
+- `modified_specific_recommendation.md` — revised plan: fixed-stretch Eval
+  reversal and the UAPC₁/APC₁ conditional separation as the first milestone,
+  full-schema equivalences as optional extension; gates, outcome tree.
+- `step0_baseline.md` — Step 0 execution record: source table (CG, Korten,
+  PS21, ILW23) with locators, convention decisions (halting-output,
+  `<= floor(n/2)`), exact Eval instance, implication ledger, `T^0_APC`
+  shortcut (§5a), Gate A handoff.
+- `step1_decoder.md` — Step 1: one-sorted definitions (sentinel encoding,
+  `Sim_c`/`CSim_c`, `Inc_c`, `CInc_c`, `EvalAvoid_4`), parameterized and
+  unary decoders with coverage lemmas, guarded universal lemmas L0–L3, the
+  `T^0_APC` derivation of the conditional separation (T1–T3), and the
+  remaining PV₁ obligations.
 
 ## Operating norms
 

@@ -222,8 +222,10 @@ f(u):
 ```
 
 The code field fits iff `m+1 <= n-2`, which holds for all `n >= 5` and
-fails at `n = 4` (field 3, room 2). Inputs of other lengths map to 0 and are
-harmless, since only coverage of compressible outputs matters. `Inc_c(4)` is
+fails at `n = 4` (field 3, room 2). An input of a different bit length is
+decoded relative to its own `n' = |u|+1` and may return a nonzero value; this
+is harmless, since the proof only needs every compressible n-bit output to
+have a preimage inside `[0, 2^(n-1))`. `Inc_c(4)` is
 a single closed true sentence (7 descriptions, 16 candidate strings) and is
 provable in PV_1 by finite evaluation. So the unary decoder has cutoff 5 with
 n = 4 as a finite case; no even/odd split is needed. Coverage with
@@ -350,10 +352,12 @@ sentences with cutoff 4. The unconditional schema has a separate sentence
 for each standard c; the priority negative target is one conditional
 sentence for a fixed c, not merely failure to prove the entire schema.
 
-### 5a. Weaker-Base Shortcut to the Conditional Separation
+### 5a. Stronger-Base Shortcut to the Conditional Separation
 
-Fable 5.1 amendment; own reasoning, not a source theorem, and not yet
-independently checked. The plan's priority conclusion is
+Fable 5.1 amendment, with Astra's corrections. `T_PV` is *stronger* than
+`PV_1`; the shortcut weakens the formalization requirements, not the base
+theory, and it does not remove the need to establish that the correctness
+statements are true. The plan's priority conclusion is
 
 ```text
 PV_1 + {Inc_c : c >= 1}  does not prove  CInc_{c0}   (under ILW23's hypotheses)
@@ -373,18 +377,12 @@ this down to `PV_1 + {Inc_c}`.
 Since `T_PV` contains every true universal PV sentence, the correctness
 lemmas behind (1) and (2) are axioms of `T^0_APC` rather than proof
 obligations, provided they have the form `forall (quantifier-free)` with
-PV-decidable matrix and are true in N. Concretely:
-
-- For (1): `forall N, d, x: (|d| <= m and Halt_c(d, x, n^c)) -> (u_d < 2^(n-1)
-  and f(u_d) = val(x))` for the Section 3 unary f. What remains is to
-  *define* f as a PV function and instantiate `dWPHP'(f)` with
-  `a = 2^(n-1), b = 1`; the n = 4 case is a closed true sentence.
-- For (2): `forall m, C, x': (valid(C) and |x'| = m) -> Halt_{c0}(pair(E,x'),
-  C(x'), 4m, C)` for a fixed evaluator E and one clock exponent c0 covering
-  evaluation plus universal simulation, and, for each fixed `m < M`, the
-  universal correctness of a brute-force PV function returning a string
-  outside the range of C. What remains is to define E, choose c0 and M, and
-  fix the circuit validity predicate and evaluator.
+PV-decidable matrix and are true in N. The lemmas must carry their guards
+explicitly: `n = |N|`, `n >= 5`, valid string encodings, `|x| = n` (the
+decoder rejects wrong-length outputs), and for the evaluator the exact
+circuit arities and the description-length bound above the overhead cutoff.
+The guarded statements L0-L3 and the derivation are written out in
+[step1_decoder.md](step1_decoder.md), Section 4.
 
 The `PV_1`-internal proofs (D1, D2, D4 below) remain necessary for the
 positive statements `UAPC_1 proves Inc_c` and `PV_1 + CInc_c proves
