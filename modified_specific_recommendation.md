@@ -9,9 +9,12 @@ remain incompressible relative to an arbitrary auxiliary input.
 
 The immediate objective is a checked chain of implications, beginning with
 bounded universal-machine decoding and fixed-stretch pigeonhole instances.
-The principal research target is an equivalence with the full parameter-free
-or parameterized pigeonhole schema. Novelty and the target equivalences are
-unverified; reconstructing a known result is an acceptable outcome.
+The first research milestone is a conditional separation between ordinary
+and auxiliary-input incompressibility, using ILW23 and a fixed-stretch Eval
+reversal. Attempt this before full-schema stretch conversions. Equivalences
+with the full parameter-free or parameterized pigeonhole schema are the
+more ambitious extension. Novelty and the target reductions are unverified;
+reconstructing a known result is an acceptable outcome.
 
 If this work provides sufficient technical preparation, pursue a separate
 question: can the Liu-Pass equivalence between one-way functions and
@@ -77,6 +80,10 @@ time. Read the specified sections for exact statements and proof ingredients,
 not every paper in full. Use additional reading only to resolve a concrete
 question needed for the next proof step.
 
+Complete items 1-3 for the first milestone. Consult items 4-5 as concrete
+reversal or stretch obligations arise, and item 6 before starting Step 3.
+Do not delay the first decoder proof for an exhaustive literature search.
+
 1. **Identify the incompressibility statement.** Read
    [Carmosino-Grosser, ECCC TR25-045, Revision 1, April 12, 2025](https://eccc.weizmann.ac.il/report/2025/045/revision/1/download),
    Sections 2.7 and 4. Extract the machine convention, description encoding,
@@ -123,7 +130,7 @@ For each target implication, label it `cited theorem`, `proof to reconstruct`,
 or `unresolved`. Distinguish a search reduction from an explicitly formalized
 arithmetic theorem.
 
-**Decision:** if the complete target is already known, reconstruct the most
+**Decision:** if the chosen target is already known, reconstruct the most
 useful proof as a learning exercise and reassess the follow-on. Otherwise,
 proceed with the missing implication identified as precisely as possible.
 
@@ -194,6 +201,10 @@ counting as a substitute for the required PV_1 proof.
 
 ### Fixed-Stretch Target
 
+Use this construction as a proof template, specializing to Eval for the
+priority milestone below. A complete classification of fixed-stretch
+schemata is not a prerequisite for that milestone.
+
 Start with a single parameter-free polynomial-time algorithm f satisfying
 `f: {0,1}^m -> {0,1}^{2m}` at each input length m. For a sufficiently generous
 polynomial clock, membership in its range gives a description of length at
@@ -222,7 +233,31 @@ to numeric interval principles is required.
 **First deliverable:** checked fixed-stretch reverse implications, with all
 constants, clocks, parameters, and finite exceptions accounted for.
 
-### Full-Schema Target
+### Priority Target: Conditional Separation
+
+Before attempting full-schema conversions, check whether the decoder and a
+single Eval reversal suffice to transfer ILW23 Theorem 24:
+
+1. Establish the Step 1 forward proof that UAPC_1 proves every
+   length-universal Inc_c sentence.
+2. Take Eval with a circuit description z as auxiliary input, restricted to
+   circuits mapping m bits to 4m bits. A range output has a U description
+   of length m + O(1), with z supplied separately. Prove in PV_1 that a
+   CInc_c witness of length 4m avoids that range, for one fixed c covering
+   evaluation and universal simulation. Check malformed encodings, finite
+   small lengths, and the exact translation to ILW23's Eval schema.
+3. Apply ILW23's unprovability of this fixed-stretch Eval principle in
+   UAPC_1, under the hypotheses in Section 2. If the two bridges are
+   checked, PV_1 plus the ordinary incompressibility schema cannot prove
+   the entire conditional incompressibility schema.
+
+**Deliverable and decision:** a short conditional-separation proof note with
+the two bridges, exact imported theorem, and novelty status. This can be a
+standalone endpoint; neither full equivalence below is required. If a bridge
+is unresolved, retain the checked lemmas and identify its precise obligation
+rather than claiming a separation. Assess this result before extending scope.
+
+### Optional Extension: Full-Schema Target
 
 Test the following equivalences over PV_1, using the exact schemata in
 Section 2:
@@ -252,11 +287,11 @@ such as `n-ceil(log_2 n)`. Compute the resulting domain size each time. A
 bound of n-1 includes every description shorter than n and gives a tight
 counting gap rather than a weak one.
 
-**Decision:** if both full equivalences are proved, derive the conditional
-separation between the two incompressibility schemata using ILW23's exact
-hypotheses. If only fixed-stretch or stronger-base results are obtained,
-state those precisely. An unsuccessful conversion is an unresolved step,
-not evidence that the principles are inequivalent.
+**Decision:** each full equivalence would characterize the corresponding
+theory; both would also give the conditional separation above. If only
+fixed-stretch or stronger-base results are obtained, state those precisely.
+An unsuccessful conversion is an unresolved step, not evidence that the
+principles are inequivalent.
 
 **Deliverable:** a short proof note containing the strongest checked result,
 its source dependencies, and a sharply stated remaining question. Assess
@@ -299,16 +334,27 @@ fit the chosen theory and remaining budget.
 
 ## 7. Execution and Decision Points
 
-Start by completing the first two readings in Step 0 and extracting the
-decoder. Finish the source table, then write Step 1's full-dWPHP forward
-proof before attempting the parameter-free case or the reversals.
+Work in this order; the optional extensions are choices, not prerequisites
+for completing the initial project.
 
-At the end of each step, review the result, unresolved proof obligations,
-time spent, and remaining AI-token budget. Choose whether to continue,
-narrow the target, or stop with a documented reconstruction. Learn additional
-bounded-arithmetic tools when a specific proof obligation requires them;
-use Krajicek's *Proof Complexity* (2019) and Buss's *Bounded Arithmetic*
-(1986) as references rather than prerequisite cover-to-cover reading.
+| Gate | Next Action | Exit Deliverable |
+| --- | --- | --- |
+| A. Baseline | Complete Step 0 items 1-3; extract the decoder and exact ILW23 instance. | Source table and explicit proof obligations; reconstruct or stop if the target is already known. |
+| B. Decoder | Prove full-dWPHP forward implications, then the unary decoder and simulation bounds. | Checked PV definitions and proofs, with any remaining gap isolated. |
+| C. First payoff | Prove the fixed-stretch Eval reversal and test the two bridges in Section 5. | Conditional-separation note if both work; otherwise the strongest checked partial result. |
+| D. Consolidate | Independently audit the note and check matching literature. | A coherent endpoint and an assessment of novelty, not an assumed publication. |
+| E. Optional extension | Choose one precise full-schema conversion or the Step 3 Liu-Pass audit. | A further theorem, reconstruction, or dependency table; not a commitment to finish both programs. |
+
+Before each gate or new proof attempt, record the target lemma, a time cap,
+a maximum additional token spend, and the remaining budget. Reserve resources
+for the final audit and writeup. At the cap, continue only if there is a
+checked new step or a sharper obligation supporting a bounded next attempt;
+otherwise narrow or stop that branch. Keep total planned expenditure below
+the Section 1 limit. Record results against the outcome tree below.
+
+Learn additional bounded-arithmetic tools when a specific proof obligation
+requires them; use Krajicek's *Proof Complexity* (2019) and Buss's *Bounded
+Arithmetic* (1986) as references rather than prerequisite reading in full.
 
 Use AI for locating sources, checking encodings, developing candidate proofs,
 and adversarial review. Require an explicit argument or a traceable theorem
@@ -317,6 +363,36 @@ description lengths, simulation time, parameter use, and base theory
 independently of the prose that proposed it.
 
 ## 8. Possible Outcomes and Their Implications
+
+### Best, Worst, and Expected
+
+| Outcome | Research Result | Value and Implications |
+| --- | --- | --- |
+| **BEST** | New full equivalences or a genuine separation clarify the strength of incompressibility; a further success could formalize Liu-Pass in APC_1. | Potentially publishable specialist advances connecting bounded arithmetic, complexity, and cryptography. Any new stretch theorem could have independent value, once its reductions and novelty are checked. Not a P versus NP breakthrough. |
+| **WORST** | The available budget is spent without a useful new theorem, checked reconstruction, or sharply isolated proof obligation. | No publication and poor research leverage. The time caps are intended to prevent prolonged unproductive attempts. Finding a known result early is a useful exit, not this worst case. |
+| **EXPECTED (TENTATIVE)** | Reconstruct forward implications, obtain some fixed-stretch results, and identify remaining obligations. Test the conditional-separation route as the first potential new result; if Step 3 is attempted, budget initially for an audit rather than a full formalization. | Useful technical progress, with publishability depending on actual novelty and completeness. Full-schema equivalences and a full Liu-Pass formalization are ambitions, not expected deliverables. This is a working planning assumption, not a consensus forecast or numerical probability. |
+
+### Outcome Tree
+
+```text
+Literature baseline
+|-- Exact target known -> reconstruct or stop (0a): useful early exit
+`-- Missing implications or translations identified (0b)
+    |-- Decoder proofs stall -> partial note and precise gap (1b)
+    `-- Forward proofs checked (1a)
+        |-- Eval reversal stalls -> retain fixed-stretch results, if any (2a)
+        `-- Eval reversal and ILW23 bridge checked -> conditional separation (2g)
+
+Audit novelty and consolidate any coherent endpoint above; stop or extend:
+|-- Full schemata -> equivalence(s) (2b/2c), stronger base (2d),
+|                   unresolved conversion, or nonimplication (2f)
+`-- Liu-Pass -> known (3a), partial/audit (3b/3c), or full (3d)
+
+At any stalled branch: apply the time/spend cap, preserve checked work,
+and narrow or stop. Exhaustion without a useful deliverable is WORST.
+Reconstruction/partial results are the EXPECTED baseline; genuinely new,
+substantial completed results lead toward BEST, subject to novelty review.
+```
 
 Use these labels at the Section 7 reviews to record established results and
 remaining obligations, not predicted success rates. Outcomes can coexist.
@@ -379,16 +455,14 @@ proofs and exact source conventions.
   a real difference in proof strength. An unsuccessful proof attempt is
   not such an argument. Nonprovability in a weak theory would concern proof
   strength, not failure of finite counting in the standard model.
+- **2g. Conditional separation from fixed-stretch proofs.** Completing the
+  priority target in Section 5 would show, under ILW23's hypotheses, that
+  ordinary incompressibility does not suffice to prove conditional
+  incompressibility over PV_1. This is a concrete potential contribution
+  before full-schema equivalences; its novelty remains to be assessed.
 
 ### Consequences and Limits
 
-- **Conditional separation.** With both full equivalences, ILW23 Theorem 24
-  implies that PV_1 + `{Inc_c}` does not prove the entire `{CInc_c}` schema,
-  under the hypotheses in Section 2. Full equivalences are not necessary:
-  the theorem already rules out fixed-polynomial-stretch dWPHP for Eval in
-  UAPC_1. A checked UAPC_1-to-Inc forward proof and a CInc-to-Eval reversal
-  at, for example, m -> 4m bit-length stretch would suffice. This makes a
-  partial reversal potentially useful before the full-schema conversions.
 - **Which unprovability transfers.** A PV_1/APC_1 separation transfers
   through 2b to failure of PV_1 to prove all of `{CInc_c}`. Neither that
   separation nor UAPC_1/APC_1 separation alone establishes unprovability
