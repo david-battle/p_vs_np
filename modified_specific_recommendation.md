@@ -315,3 +315,113 @@ and adversarial review. Require an explicit argument or a traceable theorem
 for every implication. Before accepting a result, recheck its quantifiers,
 description lengths, simulation time, parameter use, and base theory
 independently of the prose that proposed it.
+
+## 8. Possible Outcomes and Their Implications
+
+Reference for the reviews in Section 7. Each step has a small number of
+realistic terminal states; the labels below are used when recording where
+the work actually landed. Claims marked "to verify" are recollections of
+the literature, not checked statements.
+
+### Step 0
+
+- **0a. Target already known.** The forward direction is very likely in
+  Carmosino-Grosser (two-sorted) and implicit in Korten plus Jerabek. If a
+  reversal to the exact PS21/ILW23 schema also exists, Steps 1-2 become a
+  reconstruction exercise and the value moves to Step 3 preparation.
+- **0b. Forward known, reversals not.** The expected state. The one-sorted
+  translation and the parameter-free versus parameterized distinction are
+  the research content.
+
+### Step 1
+
+- **1a. Both forward directions go through.** Expected once encodings are
+  fixed.
+- **1b. Parameterized case works, parameter-free case does not.** Would
+  place even unconditional incompressibility in APC_1 rather than UAPC_1,
+  contradicting the natural expectation (hard truth tables are in UAPC_1
+  by PS21 and are incompressible strings). Read this as a defect in the
+  decoder encoding, not as evidence that Inc is strong, until proven
+  otherwise.
+
+### Step 2
+
+- **2a. Fixed-stretch reversals only.** Inc_c and CInc_c equivalent to the
+  m -> 2m or m -> 4m schemata over PV_1. Likely achievable. A correct but
+  modest result, analogous in status to Jerabek's Shannon-bound
+  equivalence before amplification.
+- **2b. Full parameterized equivalence: {CInc_c} <=> dWPHP(PV) over PV_1.**
+  Plausible, since the known stretch amplification takes a and b as
+  function inputs and z can carry them. Gives a clean characterization:
+  APC_1 = PV_1 + "strings incompressible relative to any auxiliary input
+  exist". The most likely substantive result of the program.
+- **2c. Full parameter-free equivalence: {Inc_c} <=> dWPHP'(PV) over PV_1.**
+  The hard case. Inc's only free parameter is the length n, recoverable
+  from the string; a in dWPHP' is not Log-sized, and the amplification
+  needs it inside the constructed function. PS21 recorded no known
+  stretch equivalence for dWPHP' over PV_1; this is essentially that
+  problem. If proved, it is a bounded-arithmetic theorem in its own right
+  (different-stretch parameter-free schemata equivalent over PV_1, with
+  Inc as pivot) and makes the ILW23 conditional separation transfer:
+  under its hypotheses, PV_1 + {Inc_c} does not prove CInc. If not
+  proved, record explicitly that the stated target is at least as hard as
+  the open stretch-conversion problem.
+- **2d. Reversal only over S^1_2.** Then dWPHP' <=> dWPHP already (PS21),
+  so Inc <=> CInc <=> dWPHP(PV) <=> hard Boolean functions (Jerabek 2004)
+  over S^1_2. Unsurprising; its use is to isolate the exact induction
+  step PV_1 cannot perform.
+- **2e. Sanity check.** A derivation of Inc => CInc over PV_1, combined
+  with both full equivalences, would refute the ILW23 hypotheses. Treat
+  any such proof as an error until shown otherwise.
+
+Downstream of any full equivalence in Step 2, by standard tools:
+
+- PV_1-provable equivalences translate to polynomial-size Extended Frege
+  derivations between the propositional families. EF-hardness of
+  "this string is K^t-incompressible" tautologies would then coincide with
+  EF-hardness of range-avoidance tautologies for PV functions, i.e. with
+  the Krajicek/Razborov proof-complexity-generator conjectures.
+- By KPT witnessing, PV_1 proving all Inc_c would give a polynomial-time
+  constant-round counterexample algorithm constructing incompressible
+  strings, hence via Korten an explicit construction against range
+  avoidance and circuit lower bounds for an E^NP-type class (exact class
+  to verify against Korten v3).
+- Under ILW23 or Ren-Wang-Zhong hypotheses, PV_1 does not prove Inc:
+  polynomial-time reasoning cannot prove that time-bounded random strings
+  exist.
+
+No branch says anything about P vs NP. Every unprovability statement above
+is conditional on hypotheses imported from ILW23 or Ren-Wang-Zhong.
+
+### Step 3
+
+- **3a. Already formalized.** Found in Step 0, item 6. Program ends as
+  reading.
+- **3b. Asymmetry.** The K^t-hard => weak-OWF direction (Theorem 4.1)
+  formalizes in APC_1 because the counted event (inverter succeeds) is
+  P-definable; the OWF => K^t-hard direction does not, because the
+  entropy and hashing arguments count events that are not obviously
+  P-definable. Rated the most likely substantive outcome. Publishable as
+  a dependency analysis with a concrete elimination target.
+- **3c. Question ill-posed as stated.** "A computes K^t(x) correctly" is
+  Sigma^b_1 and Pi^b_1, not P-definable, so the hardness hypothesis is a
+  probability over a set outside APC_1's counting framework. To verify:
+  counting Sigma^b_1-definable sets appears to need APC_2. If confirmed,
+  Step 3's first task forces a choice between moving to APC_2 and
+  reformulating hardness one-sidedly (e.g. "no A outputs a shortest
+  program"). A finding, not a defect: it sharpens "which results are
+  feasibly provable" to "in which theory is the statement expressible
+  with its intended meaning".
+- **3d. Both directions in APC_1.** Best case. Unprovability results for
+  either side transfer to the other over APC_1; Jerabek's witnessing
+  gives explicit probabilistic polynomial-time content, though the
+  original proofs already have it.
+
+### Expected trajectory
+
+Most probable: 0b -> 1a -> 2a or 2b -> 3b or 3c. That yields one clean
+theorem (CInc characterizes APC_1), one precisely stated open problem
+(parameter-free stretch conversion), and a dependency table showing where
+Liu-Pass leaves APC_1. The high-value, low-probability state is 2c.
+Steps 0 through 2a fit the stated constraints; 2c and 3 are open-ended and
+are where the Section 7 reviews should cut or hand off.
