@@ -11,15 +11,24 @@ conditional separation over `T^0_APC`; isolate what remains for the PV_1
 versions. Time cap for this pass: 90 minutes. No literature search.
 
 What this note is: a structured proof with every lemma stated explicitly
-and its provability status labelled. What it is not: a checked PV_1
-derivation. Every "PV_1: routine" label is an expectation to be discharged,
-not a claim already verified.
+and its provability status labelled. What it is not: a machine-checked
+PV_1 derivation. Section 6 discharges the forward-direction lemmas to the
+level of named metatheorems and standard `S^1_2` facts; any remaining
+"routine" wording in Sections 0-4 refers to that section.
 
 Astra correction pass, September 5, 2026, started 20:56 UTC: preserve the
 size resource, repair sentinel and clock conventions, state literal
 universal interfaces, and save all finite checks. Time cap: 60 minutes plus
 one bounded audit. The status ledger in Section 5.3 distinguishes the
 mathematical derivations from the remaining PV_1 and source-import work.
+
+Finalization pass (Fable 5.1), September 5, 2026, from 21:15 UTC. Target:
+review the repaired definitions and L2/W1-W3; discharge the PV_1
+obligations of the forward theorems F1 and F2 to the level of named
+standard metatheorems plus definition unfolding, isolating exactly what is
+not discharged; check the ILW23 interface against the paper's text; record
+the Gate B decision. Section 6 holds the result; the ledger in Section 5.3
+is updated in place.
 
 ## 0. Conventions
 
@@ -85,8 +94,19 @@ Wrap(B)>=1 and |Wrap(B)|=|B|+1 and Val(Wrap(B))=B.
 ```
 
 These are true quantifier-free PV matrices. Their PV_1 proofs from the
-standard bit-operation equations remain to be supplied. The related
-identity `|N|=|N'| -> Ones(N)=Ones(N')` will be denoted E0.
+standard bit-operation equations are discussed in Section 6.3. The related
+identity `|N|=|N'| -> Ones(N)=Ones(N')` will be denoted E0, and its
+consequence for the other length-determined terms,
+
+```text
+E0': |N|=|N'| -> Pow(N)=Pow(N') and Short(N)=Short(N')
+                 and A(N)=A(N') and H(N)=H(N'),
+```
+
+will be denoted E0'. Unlike E0, the `Short` clause of E0' is not a pure
+congruence: `MSP(N,k)` depends on the bits of N, so E0' needs the length
+identity `|MSP(N,k)| = |N|-k` for `k<=|N|` before E0 can be applied to
+`Pow(MSP(N,k))`.
 
 ### 0.3 The machine and the simulation function
 
@@ -279,15 +299,19 @@ parameters `(N, Z)`.
 Lemma C1 (parameterized coverage). For all `N, Z, D, X`:
 
 ```text
-|N| >= 4  and  1 <= D < 2^(m(N)+1)  and  |X| = |N|+1  and  CSim_c(D,Z,N) = X
+|N| >= 4  and  Z >= 1  and  1 <= D < 2^(m(N)+1)  and  |X| = |N|+1
+   and  CSim_c(D,Z,N) = X
    ->   D < 2^(|N|-1)   and   CDec_c(N,Z,D) = X - 2^|N|.
 ```
 
-Same statement with `Sim_c`/`Dec_c` and no `Z`.
+Same statement with `Sim_c`/`Dec_c` and no `Z`. (The hypothesis `Z >= 1`
+is available wherever C1 is used; it is also derivable, since `Z = 0`
+forces `CSim_c(D,Z,N) = 0 != X`, but stating it keeps C1 a plain
+definition-unfolding.)
 
 Proof. `D < 2^(m+1) <= 2^(n-1)` by A1. Under the hypotheses the first branch
 of `CDec_c` applies, and its value is `CSim_c(D,Z,N) - 2^|N| = X - 2^n`.
-Status: true; PV_1: routine (unfold the definition of `CDec_c`, then A1).
+Status: true; PV_1: Section 6.3 (unfold the definition of `CDec_c`, then A1).
 This is where defining the decoder from the same `CSim_c` used in the target
 sentence pays off: no separate simulation-correctness fact is needed.
 
@@ -311,10 +335,13 @@ displayed instance at `u = D`. Hence `forall D (1 <= D < 2^(m+1) ->
 CSim_c(D,Z,N) != X)`, and `X` witnesses `CInc_c(N,Z)`. The unconditional case
 is identical with `Dec_c`, `Sim_c`, and no `Z`.
 
-Status of the theorem: the logical skeleton is complete; each cited lemma is
-labelled PV_1-routine but not yet written out as a PV_1 derivation. Over
+Status of the theorem: the logical skeleton is complete; the cited lemmas
+are discharged in Section 6 at the level described there. Over
 `T_APC = T_PV + dWPHP(PV)` the derivation holds for the defined algorithms:
 A1, A4, C1 and their defining equations are true universal sentences.
+Formally `dWPHP(PV)` takes one parameter `z`; `CDec_c` has the pair
+`(N,Z)`, which is packed by a PV pairing function whose projection
+identities PV_1 proves.
 
 ## 3. Unary Decoder and the UAPC_1 Forward Direction
 
@@ -351,10 +378,10 @@ Proof. By A2, `D < 2^(m+1) <= 2^(n-2)`, so by A3 `|u_D| = n-1` and
 computes `n' = |u_D|+1 = n >= 5`, `m' = m`, `D' = D != 0`, then
 `S = Sim_c(D, 2u_D)`. Since `|2u_D| = n = |N|`, S0 gives
 `S = Sim_c(D,N) = X`. Equal lengths also give
-`Short(2u_D)=Short(N)` and `Pow(2u_D)=Pow(N)` by their definitions, so the
+`Short(2u_D)=Short(N)` and `Pow(2u_D)=Pow(N)` by E0', so the
 actual modulus and subtraction in f_c agree with those in C2. Since
 `|S|=n+1`, its value is `X-2^n`.
-Status: true; PV_1: routine given E1, S0, A2, A3.
+Status: true; PV_1: Section 6.3, given E0', S0, A2, A3.
 
 ### 3.3 The finite case n = 4
 
@@ -378,7 +405,7 @@ sixteen finite-counting argument remains a fallback, not a needed premise.
 
 ### 3.4 Theorem F2 (UAPC_1 proves Inc_c, each fixed c)
 
-Claim: `PV_1 + dWPHP'(f_c) proves Inc_c`, modulo E1, S0, A2-A4, C2, L0_c.
+Claim: `PV_1 + dWPHP'(f_c) proves Inc_c`, modulo E0', S0, A2-A4, C2, L0_c.
 
 Proof. Fix `N`, `n = |N| >= 4`. If `n = 4`, take `X := 16`; L0_c gives
 the required `forall D`. If `n >= 5`, instantiate `dWPHP'(f_c)` with
@@ -392,7 +419,7 @@ Set `X := 2^n + v`. If some `D` with `1 <= D < 2^(m+1)` had `Sim_c(D,N) = X`,
 then by C2 `u_D < 2^(n-1)` and `f_c(u_D) = v`, contradicting the instance.
 So `X` witnesses `Inc_c(N)`.
 
-Status: skeleton complete; PV_1 lemmas labelled routine, not yet derived.
+Status: skeleton complete; the PV_1 lemmas are discharged in Section 6.
 Over `T^0_APC` the theorem holds outright (Section 4).
 
 ## 4. The T^0_APC Route to the Conditional Separation
@@ -572,6 +599,7 @@ arities, and that `NativeEval` uses those fixed input/output widths. No
 bound `|B|<=m^k` may be introduced. This is a precise source-formalization
 obligation, not an extra cryptographic assumption or an arbitrary-coding
 equivalence. No separate gate representation needs to be invented here.
+Section 6.5 records the outcome of this check against the paper's text.
 
 Theorem T3 (subject to that source binding). Assume JLS-secure iO exists and
 `coNP` is not contained in `i.o.NP/poly`, as in ILW23 Theorem 24. Then
@@ -591,10 +619,11 @@ UAPC_1. The nonprovability descends to both subtheories.
 
 Status: the logical deduction and explicit wrapper implication are written
 out. The truth arguments for L0-L3 use the specified efficient-machine and
-native-evaluator contracts. The source binding still needs independent
-sign-off; PV_1 derivations and certified concrete implementations have not
-been supplied. Do not label this a completed Gate B or an independently
-verified new separation. Nothing here has been checked for novelty.
+native-evaluator contracts. The source binding is resolved in Section 6.5
+into the encoding properties (E-a), (E-b). PV_1 derivations of the
+reversal and certified concrete implementations have not been supplied.
+This is not an independently verified new separation, and nothing here has
+been checked for novelty.
 
 Remark (what T3 does and does not say). It says that ordinary
 incompressibility sentences, even all of them together over `PV_1`, do not
@@ -619,11 +648,13 @@ counterpart over T_APC is established by the true-universal argument.
   mathematical arguments apply to any fixed realization satisfying the
   explicit contracts. No exact transition table or gate-code implementation
   is claimed to have been checked.
-- Still required for Gate B: install the relevant PV defining equations
-  and prove the elementary resource/encoding facts there. S0 then follows
-  by congruence; it no longer rests on an impossible syntactic restriction.
-- Still required for the imported separation: independently sign off the
-  source binding in Section 4.4. The wrapper implication itself is explicit.
+- Done in Section 6 for the forward direction: the PV_1 basis is named,
+  the resource/encoding facts are reduced to standard `S^1_2` facts and
+  imported by conservativity, and S0 follows by congruence from E0.
+- For the imported separation, the source-binding question of Section 4.4
+  is reduced in Section 6.5 to encoding properties (E-a), (E-b), under
+  our reading of Theorem 24's proof; an encoding satisfying them is still
+  to be fixed. The wrapper implication itself is explicit.
 
 Choosing a particular numerical value of c_0 is not needed for the theorem
 that **some fixed standard exponent** works. It would be needed to identify
@@ -648,17 +679,19 @@ simulation correctness enters is L2, i.e. the reversal.
 
 | Result | Status | Remaining |
 | --- | --- | --- |
-| T1: `T^0_APC proves Inc_c`, all c | Mathematical derivation with explicit true-universal lemmas for the specified runner | Independent review of the resource terms and defining equations; no machine-checked implementation |
-| T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | Mathematical derivation for the efficient-U/native-evaluator contracts; E, clock choice, and finite repair are specified | Review those contracts and L2/L3's truth arguments |
-| Local EvalAvoid_4 implies native avoidance in T_PV | Explicit wrapper proof W1-W3 plus corrected zero-length repair | Source-symbol/domain identification, not arbitrary-coding invariance |
-| T3: conditional separation | Deduction from T1, T2, the wrapper, and ILW23; source binding still to sign off | Do not yet mark independently verified; novelty unassessed |
-| F1: `APC_1 proves Inc_c, CInc_c` | Proof skeleton complete | PV_1 proofs of A1, A4, C1 using actual defining equations |
-| F2: `UAPC_1 proves Inc_c` | Proof skeleton complete | PV_1 proofs of E0/S0, A2-A4, C2, L0_c |
-| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 and elementary identities in PV_1 |
+| T1: `T^0_APC proves Inc_c`, all c | Mathematical derivation with explicit true-universal lemmas for the specified runner; resource terms and E0/E0'/S0 re-reviewed in Section 6.1 | No machine-checked implementation |
+| T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | Mathematical derivation for the efficient-U/native-evaluator contracts; E, clock choice, and finite repair specified and re-reviewed (Section 6.1) | Nothing further at the T_PV level; PV_1 version is Step 2 |
+| Local EvalAvoid_4 implies native avoidance in T_PV | Explicit wrapper proof W1-W3 plus corrected zero-length repair | None at the T_PV level |
+| T3: conditional separation | Deduction from T1, T2, the wrapper, and ILW23 Theorem 24; the source interface is checked against the paper in Section 6.5 and, under our reading of the proof, reduces to properties (E-a), (E-b) of whatever `(NativeCirc, NativeEval)` is fixed | Fix one encoding with (E-a), (E-b); audit the 6.5 reading; novelty unassessed |
+| F1: `APC_1 proves Inc_c, CInc_c` | PV_1 derivation complete relative to M1-M4 of Section 6.2 (Sections 6.3-6.4); uses no property of the runners | Paper-level; not machine-checked |
+| F2: `UAPC_1 proves Inc_c` | PV_1 derivation complete relative to M1-M4 and the first clause of D1a; uses E0', S0, A1-A4, C2, L0_c (Sections 6.3-6.4) | Paper-level; not machine-checked |
+| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 in PV_1; this is the D4 simulation-bound obligation (Section 6.6) |
 
-**Current endpoint:** the earlier errors are repaired and the T_PV-level
-arguments have explicit algorithms and interfaces. Step 1 remains partial
-under the modified plan's requirement for checked PV_1 forward proofs.
+**Current endpoint:** Step 1's forward theorems F1 and F2 are derived in
+PV_1 at paper level, with the metatheorems and the runner specification they
+rest on named explicitly (Section 6). The reversal L2 remains a T_PV-level
+truth argument; its PV_1 proof is the Step 2 obligation. See Section 6.7
+for the Gate B decision.
 
 ### 5.4 Finite checks performed
 
@@ -673,8 +706,9 @@ python3 check_step1.py
 It uses only the Python standard library. It retains the original seeded
 abstract simulation check (417 C1 instances, 412 C2 instances), now through
 the canonical resource, and checks the literal bit terms on 4,096 resource
-values and 24,532 unary preimage/resource identities. It also checks invalid short
-pair descriptions, conditional decoding, the clock-exponent inequality,
+values and 24,532 unary preimage/resource identities. It also checks
+invalid short pair descriptions, conditional decoding, the clock-exponent
+inequality,
 and the native/sentinel wrapper on small finite circuit tables. The
 zero-length cases remain as regressions: the old raw-bit expression is
 rejected and `5-Eval(C,1)` produces the correct encoded complement.
@@ -706,12 +740,263 @@ checks are included in the saved script, not left only in the transcript.
 
 ### 5.6 Suggested next actions
 
-1. Review E0/S0, the literal bit terms, W1-W3, the clock choice, and the
-   source binding. Decide whether the paper-level T_PV derivation is
-   acceptable for the explicitly specified implementation class.
-2. For Gate B, select the concrete PV definitions/basis and discharge the
-   elementary F1/F2 obligations. Do not relabel expected proofs as checked
-   merely because the T_PV derivations are available.
-3. If continuing to PV_1 reversals, formalize L2's fixed-program simulation
-   and L3 there. Keep this distinct from importing the negative theorem and
-   from any claim of novelty.
+Items 1-2 of the earlier list (review of E0/S0, bit terms, W1-W3, clock
+choice, source binding; selection of the PV_1 basis and discharge of the
+F1/F2 obligations) are carried out in Section 6. What remains:
+
+1. Independent audit of Section 6, in particular the S^1_2-level
+   justifications in 6.3 and the encoding-robustness reading of ILW23 in
+   6.5. An auditor who disagrees with any 6.3 row should say which
+   BASIC-level fact they think is missing, not merely that the row is
+   "not formal".
+2. Step 2 / Gate C: formalize L2's fixed-program simulation and L3 in
+   PV_1 (Section 6.6). Keep this distinct from importing the negative
+   theorem and from any claim of novelty.
+3. Gate D: novelty check for the conditional separation T3 (search terms:
+   "conditional Kolmogorov complexity" / "auxiliary input" with
+   "dual weak pigeonhole", "UAPC", "parameter-free").
+
+## 6. Step 1 Finalization
+
+### 6.1 Review of the repaired definitions, L2, and W1-W3
+
+Parting-note items 1 and 2 were re-derived by hand, independently of the
+prose in Sections 0-4, with these results.
+
+- Term table (0.2): every row evaluates as stated, including the edge
+  cases `Pow(0)=1`, `Ones(0)=0`, `Top(0)=0`, `Short(0)=2`, `Pad4(0)=0`,
+  `Wrap(0)=1`. `Short` at `|N|=1` gives `2=2^(0+1)`, as required.
+- E0 and S0 (0.3): `Sim_c(D,N)` is by definition `Run_c(D,Ones(N))`, and
+  `Ones(N)=Pow(N)-1=1#N-1`; so S0 is a congruence once E0 is known. This
+  is the repair Astra made and it is correct. The proof of C2 additionally
+  needs `Short(2u_D)=Short(N)`, which is not a congruence in `N` because
+  `MSP(N,k)` reads N's bits. That is the reason for adding E0' in 0.2.
+- A1-A6, E1 (1, 0.2): all correct. The boundaries are tight where claimed:
+  A1 at `n=4` (`3<=3`), A2 and A3 at `n=5` (`m+1=3<=3`, and the quotient
+  `2^(n-2)/2^(m+1)` equals 1, so the `mod` identity has no slack).
+- C1 (2.2): the case branch of `CDec_c` requires `Z>=1`, which the earlier
+  statement omitted. It is derivable from `CSim_c(D,Z,N)=X!=0`, but it has
+  now been added to the hypothesis so C1 is a pure unfolding.
+- L2 clock (4.1): with `s=m+|C|`, `r=4m+|C|`, one has `s<=r`, `r>=2`, and
+  `K*s^d <= r^ceil(log2 K) * r^d = r^c_0`. The description bound
+  `|P(X')|=M_0+m+1<=2m+1` holds exactly when `m>=M_0`, which is L2's guard.
+  The deadline of `CSim_{c_0}(P(X'),C,Pad4(M))` is `(|Ones(Pad4(M))|+|C|)^c_0
+  =(4m+|C|)^c_0=r^c_0`. Correct.
+- W1-W3 and the zero-length repair (4.4): correct. In particular
+  `Out(1)=max(2,1)=2`, `Eval(C,1) in {2,3}` under the contract
+  `NativeEval(B,0)<2`, and `5-Eval(C,1)` is the other element.
+- L0_c (3.3): correct, and simpler than stated there: it follows from the
+  malformed branch D1a below without any use of E0 or of clock size.
+
+No mathematical error was found. The two tightenings above are the only
+changes to Sections 0-4 made in this pass.
+
+### 6.2 PV_1 basis and the metatheorems used
+
+`PV_1` is Cook's equational theory PV (a function symbol for each
+polynomial-time function, introduced by composition and limited recursion
+on notation, with its defining equations), taken as a first-order theory
+with induction for open formulas, exactly as in Krajicek, *Proof
+Complexity* (2019), Chapter 12, and as used by PS21 and ILW23. Open PV
+formulas have PV characteristic functions, and definition by cases is
+available through `cond`. The derivations below use four standard facts.
+
+- **M1 (conservativity).** `PV_1` is contained in `S^1_2(PV)`, and
+  `S^1_2(PV)` is `forall Sigma^b_1(PV)`-conservative over `PV_1` (Buss,
+  *Bounded Arithmetic*, 1986, via the witnessing theorem for `S^1_2`; the
+  statement in this form is standard, e.g. Cook-Thapen, "The strength of
+  replacement in weak arithmetic", 2006, Section 1). Every universally
+  closed open PV sentence is `forall Sigma^b_1(PV)`. Hence any of the
+  identities below that has an ordinary `S^1_2` proof, using BASIC and
+  `Sigma^b_1`-LIND, is a `PV_1` theorem. M1 transfers provability, not
+  proof size; nothing here needs proof size.
+- **M2 (unfolding).** For `f(x)=cond(chi(x),s(x),t(x))` with `chi` the
+  characteristic function of an open condition `phi`, `PV_1` proves
+  `phi(x) -> f(x)=s(x)` and `not phi(x) -> f(x)=t(x)`. "Unfold" below means
+  exactly these steps together with the equality axioms.
+- **M3 (Cobham).** Every polynomial-time function has a PV symbol. This
+  supplies `Run_c`, `CRun_c` (step-by-step simulation of U by limited
+  recursion on notation along a term of length `|W|^c`, respectively
+  `(|W|+|Z|)^c`, e.g. an iterated smash), the pair parser, `P`, `R`,
+  `MSP`, `mod`, floor division, and a pairing function with projections.
+  What `PV_1` knows about `Run_c` is its defining equations, and only D1a
+  below is used.
+- **M4 (closed terms).** `PV_1` proves `t=n` for every closed term `t` and
+  the numeral `n` of its value. Used only for the finite case split in D1a.
+
+**D1a (malformed branch; a definitional requirement).** `Run_c` and
+`CRun_c` are defined in the form `cond(Malformed(D), 0, ...)` and
+`cond(Malformed(D) or Z=0, 0, ...)`, where `Malformed` is the PV pair-syntax
+check of 0.3, with `Malformed(0)=1` covering the `D>=1` guard. Since no
+valid description has fewer than 4 bits, every `D<16` (string length
+`<=3`) is malformed. `PV_1` proves `D<16 -> Malformed(D)=1` by the case
+split `D<16 -> D=0 or ... or D=15` (an `S^1_2` triviality, hence `PV_1` by
+M1) and M4 on the sixteen closed instances. Therefore
+
+```text
+D1a:  D<16 -> Run_c(D,W)=0;     Z=0 -> CRun_c(D,Z,W)=0.
+```
+
+F1 uses no property of the runners at all (C1 is pure unfolding, and
+`Z>=1` is a hypothesis of `CInc_c`); F2 uses only the first clause of D1a,
+through L0_c. The second clause is recorded for completeness and is used
+nowhere. In particular no simulation-correctness statement about U enters
+the forward direction; this is the point made in 5.2 and it is what makes
+the discharge below possible without D4.
+
+### 6.3 Discharge of the open lemmas
+
+Each row reduces the lemma to facts of the following kind, all of which
+are `S^1_2` theorems about length-bounded powers of two (Buss 1986,
+Chapter 2 bootstrapping; Hajek-Pudlak, Chapter V.3). Here `k`, `j` range
+over length terms, so `2^k` denotes a PV term such as `Pow`, `Short`,
+`A`, `H`, `Pow(M)^4`:
+
+```text
+(P1) |x|=|y| -> x#z=y#z;   x#y=y#x                     (BASIC)
+(P2) x>=1 -> 2^(|x|-1) <= x < 2^|x|;    x<2^k <-> |x|<=k
+(P3) k<=j <-> 2^k<=2^j;   2^(k+1)=2*2^k;   2^k*2^j=2^(k+j)
+(P4) x<2^k and k<=j -> |2^j+x|=j+1 and (2^j+x)-2^j=x
+(P5) d<2^k -> (q*2^k+d) mod 2^k = d;   k<=|x| -> |MSP(x,k)|=|x|-k
+```
+
+| Lemma | Reduction |
+| --- | --- |
+| E0 | `Pow(N)=1#N`; P1. |
+| E0' | `Pow`, `A`, `H` are functions of `Pow(N)`: E0. For `Short`: P5 gives `|MSP(N,k)|=|N|-k` with `k=|N|-floor(|N|/2)`, so equal `|N|` give equal `|MSP(N,k)|`, then E0 for `Pow(MSP(N,k))`. |
+| E1 | First clause: P2 with `Top(S)=2^(|S|-1)` (P3 halving of `Pow`). Second clause: P2 with `k=floor(|N|/2)+1`. Third: P4 with `x=B`, `j=k=|B|`. |
+| A1, A2 | P3 with `floor(n/2)+1 <= n-1` for `n>=4`, `<= n-2` for `n>=5`; `2*A(N)=Pow(N)`, `2*H(N)=A(N)` by P3 halving. |
+| A3 | P4 with `x=D`, `k=m+1`, `j=n-2` gives the length and the bound; P5 with `q=2^(n-3-m)=Pow(MSP(N,m+3))` gives the `mod` identity; P3 for `|2(H+D)|=n`. |
+| A4 | P4 with `j=k=|N|`; converse from P2. |
+| A5, A6 | P3: `|Pad4(M)|=4|M|`, `Short(Pad4(M))=2^(2m+1)=2*Pow(M)^2`, `Pow(Pad4(M))=Pow(M)^4`; `2^m+1<=2^(4m)` for `m>=1`. |
+| S0 | E0 and the equality axioms applied to `Run_c(D,Ones(N))`. |
+| C1 | M2 on `CDec_c` at `u=D`: the condition `1<=D<Short(N) and Z>=1 and |CSim_c(D,Z,N)|=|N|+1` is literally the hypothesis list with `CSim_c(D,Z,N)=X`; the value is `X-Pow(N)`. `D<A(N)` is A1. Same for `Dec_c`. |
+| C2 | A2, A3 give `u_D=H(N)+D` with `|u_D|=n-1`, `u_D<A(N)`, `u_D mod Short(N)=D`, `|2u_D|=n`. M2 on `f_c` at `u_D`: `n'=n>=5`; `W=2u_D`; E0' gives `Short(W)=Short(N)` and `Pow(W)=Pow(N)`, so `D'=D!=0`; S0 gives `Sim_c(D,W)=Sim_c(D,N)=X`; `|X|=n+1` selects the branch returning `X-Pow(N)`. |
+| L0_c | `1<=D<8 -> D<16`, D1a, `0!=16`. |
+
+Every row is a finite chain of unfoldings and instances of P1-P5. Nothing
+in the table is a claim about U, about circuits, or about proof size.
+
+### 6.4 Theorems F1 and F2 in PV_1
+
+With the table in place, the proofs written in 2.3 and 3.4 are `PV_1`
+derivations: they are first-order reasoning from one instance of the
+pigeonhole axiom, the open lemmas C1 (resp. C2, L0_c), A4, A1 (to read
+the instance's bound `a(b+1)=2*A(N)` as `Pow(N)`), and the case split
+`|N|=4 or |N|>=5` from `|N|>=4`, with `a:=A(N)>0` (P2, `|N|>=1`) and
+`b:=|1|=1` as the `Log` witness. The `|N|=4` case of F2 also uses
+`|N|=4 -> Pow(N)=16 and Short(N)=8` (P3, P5) and the closed facts
+`|16|=5`, `16<32` (M4); `Short(N)=8` passes from `Inc_c`'s bound
+`D<Short(N)` to L0_c's hypothesis `D<8`. For F1 the two parameters
+`(N,Z)` of `CDec_c` are packed by the M3 pairing function.
+
+```text
+F1:  PV_1 + dWPHP(Dec_c)  proves Inc_c;   PV_1 + dWPHP(CDec_c) proves CInc_c.
+F2:  PV_1 + dWPHP'(f_c)   proves Inc_c.
+```
+
+Status: **derived in PV_1 at paper level**, relative to M1-M4 and the
+definitional requirement D1a. "Paper level" means each step is either a
+named standard metatheorem, an instance of P1-P5, or a definition
+unfolding; no step is labelled "routine" without its reduction being
+written. Not machine-checked. Consequently `UAPC_1` proves every `Inc_c`
+and `APC_1` proves every `Inc_c` and `CInc_c`: plan outcome **1a**.
+
+### 6.5 The ILW23 interface, checked against the text
+
+The ECCC TR23-038 PDF (original March 2023 report) was text-extracted on
+September 5, 2026 and the following were confirmed. Printed page numbers.
+
+- p. 8, Section 2.3 and footnote 8: `forall n in Log` abbreviates
+  `forall N forall n=|N|`; `T_PV` is the set of true sentences
+  `forall x beta` with `beta` quantifier-free in `L(PV)`. Both match the
+  conventions of this note.
+- p. 13, Section 4.1: `dWPHP_ell(Eval) := forall n in Log forall circuits
+  C:{0,1}^n->{0,1}^ell exists y in {0,1}^ell forall x in {0,1}^n
+  [Eval(C,x)!=y]`, with `Eval(C,x):=C(x)`.
+- p. 16, equation (7) and footnote 14: `dWPHP'(f)` exactly as in 0.5;
+  `UAPC_1 := PV_1 + dWPHP'(PV)`.
+- p. 17: `T^0_APC := T_PV + dWPHP'(PV)`; Theorem 24 as recorded in Step 0;
+  Theorem 25 (= PS21 Theorem 4); Definition 26; statement of Theorem 27.
+- p. 18: proof of Theorem 27, which says "circuits encoded by an s-bit
+  string" and computes the input length from C; Theorem 28 (AVOID is not
+  solvable by polynomial-size circuit families with `O(1)`
+  circuit-inversion gates, under the two hypotheses).
+
+**The paper fixes no bit-level circuit encoding and no formal validity
+predicate.** So the question in 4.4 ("does `NativeCirc` describe exactly
+that circuit domain?") has no textual answer. What the text does give is
+the structure of the proof of Theorem 24: Theorem 25 applies to *any*
+`forall exists forall` sentence with open `L(PV)` matrix and is
+encoding-agnostic; Theorem 27 uses only that the input arity is computable
+from the code and that `Eval(C,x)=C(x)` on every valid code, so that the
+extracted circuit family solves AVOID on every valid code; Theorem 28 is a
+statement about Boolean circuits given by some description, and its
+reduction feeds constructed circuits to the AVOID solver *as codes*. So
+transferring Theorem 28 to a different encoding needs a polynomial-time
+map from standard descriptions into that encoding; existence of codes and
+size-relatedness alone do not suffice. (A counterexample was found in
+audit: pair each gate list with a string `y` outside its range and let
+`NativeEval` avoid `y` by construction; every circuit then has a code of
+related size, yet `PV_1` proves the avoidance sentence for that pair,
+because producing the code *is* AVOID.) Consequently (this is our reading
+of the proof, not a sentence in the paper) Theorem 24 holds verbatim for
+any fixed PV pair `(NativeCirc, NativeEval)` with:
+
+```text
+(E-a) there is a PV function code(G) such that for every standard gate
+      list G for a circuit {0,1}^k->{0,1}^l, NativeCirc(code(G),k,l) and
+      NativeEval(code(G),u) = G(u) for all u<2^k; arities are unique and
+      PV-readable from any valid B; |code(G)| is polynomial in |G|;
+(E-b) NativeCirc(B,k,l) and u<2^k  ->  NativeEval(B,u) < 2^l.
+```
+
+Only the standard-to-native direction of coding is needed. Any standard
+gate-list encoding with explicit arities and an l-bit output mask
+satisfies both, with `code` the identity. This reduces the "source
+binding" item of 4.4 to a specification on our own choice of encoding,
+under our reading of the proof of Theorem 24; it is **not** the
+arbitrary-coding provability invariance that 4.4 declined to assume,
+because the arithmetic side (W1-W3, L2, L3, `EvalAvoid_4`) is stated for
+the same fixed pair. The zero-length point stands as in 4.4:
+`forall n in Log` includes `N=0`, Theorem 24 needs `n<ell(n)`, so the
+stretch used is `ell_*(n)=max(1,4n)` and the zero-length repair is needed.
+
+T3 therefore stands as: under ILW23's hypotheses and our reading of
+Theorem 24's proof, for any fixed pair satisfying (E-a), (E-b), `T^0_APC`
+does not prove `CInc_{c_0}`, hence neither does `PV_1 + {Inc_c : c>=1}`
+nor `UAPC_1`. Its remaining status items are: fix one concrete encoding
+satisfying (E-a), (E-b); independent audit of this reading; novelty.
+
+### 6.6 What is not discharged
+
+- **D4 / L2 in PV_1.** The fixed-program simulation correctness and clock
+  bound for E. This is the one place simulation correctness enters, and
+  it is needed only for the positive reversal
+  `PV_1 + CInc_{c_0} proves EvalAvoid_4`, not for T1-T3. It is the plan's
+  Step 1 task 4 / Gate B "simulation bounds" item and the first Step 2
+  target. Its truth argument is L2's; its PV_1 proof would formalize
+  U's step relation for the fixed program E.
+- **L3 in PV_1.** Finite counting over `2^k+1` candidates for the constant
+  range `1<=k<M_0`; elementary but not written.
+- **W1-W3 and the zero-length identity in PV_1.** Straightforward from E1,
+  A4, A5 and (E-b) once the chosen `NativeEval` has its output bound as a
+  PV_1 theorem; depends on the encoding fixed under 6.5.
+- **Machine checking.** None of the above is machine-checked;
+  `check_step1.py` remains a finite sanity check.
+- **Novelty.** Unassessed (Gate D).
+
+### 6.7 Gate B decision
+
+Gate B's exit deliverable is "checked PV definitions and proofs, with any
+remaining gap isolated". Decision: **Gate B is passed for the forward
+direction (outcome 1a) at paper level**, and the simulation-bound part of
+Gate B is **isolated, not passed**: L2 has a T_PV-level truth argument and
+an explicit PV_1 obligation (6.6), and nothing in T1-T3 depends on it.
+
+Recommended order: Gate D first (independent audit of Section 6, fixing a
+concrete encoding for (E-a), (E-b), and the novelty check for T3), because
+T3 now has both bridges at the T_PV level with the source interface
+reduced to a specification, and a cheap novelty check may change what is
+worth formalizing; then Gate C with L2-in-PV_1 as the target lemma and a
+fresh time cap.

@@ -39,7 +39,12 @@ P vs NP content lives here; kangaroo-sequence content stays there.
   `Sim_c`/`CSim_c`, `Inc_c`, `CInc_c`, `EvalAvoid_4`), parameterized and
   unary decoders with coverage lemmas, guarded universal lemmas L0–L3, the
   `T^0_APC` derivation of the conditional separation (T1–T3), and the
-  remaining PV₁ obligations.
+  Step 1 finalization (§6): PV₁ basis and metatheorems, discharge of the
+  forward lemmas (F1/F2, outcome 1a at paper level), the ILW23 encoding
+  check reducing source binding to properties (E-a)/(E-b), the isolated
+  remaining obligation (L2 in PV₁), and the Gate B decision.
+- `check_step1.py` — finite sanity checks for Step 1 (`python3
+  check_step1.py`); standard library only. Not a PV₁ proof.
 
 ## Operating norms
 
