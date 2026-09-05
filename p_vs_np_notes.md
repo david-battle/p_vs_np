@@ -218,3 +218,64 @@ ZFC. The self-structure found so far is algorithmic and productive. The
 self-reference P vs NP exhibits is *computational-reflex*, not
 *formal-incompleteness* — which is exactly why the intuition doesn't lead to
 independence. It's a good intuition to hold; it's just not the Gödelian kind.
+
+## 7. Machine-Gödel: proof-search, budgets, and the self-defeating search
+
+An attempt to give the L intuition a *genuinely* Gödelian flavor (a real
+arithmetic fixed point, not a loose rhyme), by letting the machine search for
+proofs about itself. It works — with the caveat that the self-reference lives
+in the *budget*, not in the search.
+
+**The bridge: P=NP ⇒ proof-search is in P.** Proofs are certificates, so
+`{⟨φ,1^k⟩ : φ has a ZFC-proof of length ≤ k}` is in NP (guess + verify) and
+hence in P if P=NP: there is a poly-time proof-finder. This is the honest
+content of "P=NP would make math easy." The budget `k` is essential.
+
+**The fixed point (genuine self-reference).** Gödel's diagonal lemma: for any
+formula ψ(x) there is a sentence φ with ZFC ⊢ φ ↔ ψ(⌜φ⌝). Let A be a poly-time
+proof-searcher and set
+
+  G_A := "A does not output a ZFC-proof of me within |⌜G_A⌝|^k steps."
+
+The lemma manufactures the self-reference: G_A speaks about whether A finds a
+proof of G_A — the same machinery that builds G ("I am not provable"), with a
+time budget instead of PA.
+
+**The theorem: the machine's speed casts its own shadow.** If ZFC is sound,
+G_A is true, and no ZFC-proof of it fits A's budget. If A found one, G_A would
+be provable hence true, but its truth says A did *not* find it — contradiction.
+So the search is empty, and G_A is true because it says the search is empty.
+
+This is *conditional on P=NP*: if P=NP, a poly-time A exists and there is
+arithmetic truth A provably cannot reach even at full speed — diagonalization
+outruns the budget. If P≠NP, no such A exists and nothing casts a shadow. So
+P=NP doesn't mean "we find all proofs fast"; it means "there is a fast finder,
+and here is a true sentence it provably cannot find." Power manufactures the
+limit — the GEB flavor, made rigorous.
+
+**The user's scenario ("if P=NP then L finds a proof that P≠NP") is
+self-defeating by cases:**
+- *If P=NP is true:* P≠NP is false; a sound system proves no falsehood, so L's
+  search for the proof of its own failure returns empty *precisely because L
+  succeeded*. The machine can't find the proof that it's slow, because being
+  fast makes that claim false.
+- *If P≠NP is true:* L is slow, so "L finds a proof of P≠NP" holds only if
+  P≠NP has a *short* proof — the question degenerates to "is there a
+  poly-length ZFC proof of P≠NP," a genuinely open Π⁰₁ question, consistent
+  with P≠NP being true but only long-provable (Ben-David–Halevi territory, §3).
+
+So "L finds a proof that L is slow" can never bite: in the world where L is
+fast, its target is false; in the world where the target is true, L is too slow
+to reach it. **L's speed and the truth of P≠NP mutually exclude each other's
+proofs** — a clean self-referential closure.
+
+**Löb footnote (ties to §4).** Add the single reflection schema "if ZFC proves
+P≠NP, then P≠NP"; by Löb's theorem ZFC then proves P≠NP outright. A reflection
+rung settles it immediately — the "host principle" argument, now with a
+proof-theoretic name.
+
+**Honesty caveat.** Unbounded proof-search is always r.e. — dovetail over
+proofs and verify, which is already Levin-style search, no P=NP needed. P=NP
+only buys the *budget* (poly-time halting). That is why every G_A needs its `k`:
+without a budget, "A finds a proof of φ" is trivially r.e. and the construction
+dissolves. The self-reference lives in the budget, not in the search.
