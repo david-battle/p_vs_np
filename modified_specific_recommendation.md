@@ -248,8 +248,9 @@ single Eval reversal suffice to transfer ILW23 Theorem 24:
    small lengths, and the exact translation to ILW23's Eval schema.
 3. Apply ILW23's unprovability of this fixed-stretch Eval principle in
    UAPC_1, under the hypotheses in Section 2. If the two bridges are
-   checked, PV_1 plus the ordinary incompressibility schema cannot prove
-   the entire conditional incompressibility schema.
+   checked, then PV_1 + {Inc_c} is a subtheory of UAPC_1 and so cannot
+   prove CInc_c for the fixed c used in bridge 2. This is a single-sentence
+   unprovability result, stronger than failure to prove the whole schema.
 
 **Deliverable and decision:** a short conditional-separation proof note with
 the two bridges, exact imported theorem, and novelty status. This can be a
@@ -368,7 +369,7 @@ independently of the prose that proposed it.
 
 | Outcome | Research Result | Value and Implications |
 | --- | --- | --- |
-| **BEST** | New full equivalences or a genuine separation clarify the strength of incompressibility; a further success could formalize Liu-Pass in APC_1. | Potentially publishable specialist advances connecting bounded arithmetic, complexity, and cryptography. Any new stretch theorem could have independent value, once its reductions and novelty are checked. Not a P versus NP breakthrough. |
+| **BEST** | The conditional separation (2g) is checked and new, and at least one full-schema equivalence (2b or 2c) or a nonimplication (2f) is also proved; a further success could formalize Liu-Pass in APC_1. | Potentially publishable specialist advances connecting bounded arithmetic, complexity, and cryptography. Any new stretch theorem could have independent value, once its reductions and novelty are checked. Not a P versus NP breakthrough. |
 | **WORST** | The available budget is spent without a useful new theorem, checked reconstruction, or sharply isolated proof obligation. | No publication and poor research leverage. The time caps are intended to prevent prolonged unproductive attempts. Finding a known result early is a useful exit, not this worst case. |
 | **EXPECTED (TENTATIVE)** | Reconstruct forward implications, obtain some fixed-stretch results, and identify remaining obligations. Test the conditional-separation route as the first potential new result; if Step 3 is attempted, budget initially for an audit rather than a full formalization. | Useful technical progress, with publishability depending on actual novelty and completeness. Full-schema equivalences and a full Liu-Pass formalization are ambitions, not expected deliverables. This is a working planning assumption, not a consensus forecast or numerical probability. |
 
