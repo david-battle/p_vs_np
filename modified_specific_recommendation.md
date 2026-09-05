@@ -75,6 +75,13 @@ equivalence with the near-equal-cardinality schema defined above.
 
 ## 3. Step 0: Establish the Literature Baseline
 
+**Execution record (September 5, 2026):** the
+[Step 0 baseline](step0_baseline.md) contains the checked sources, convention
+decisions, exact Eval instance, implication ledger, and Gate A handoff.
+Gate A's research deliverables are complete via outcome 0b; proceed to
+Step 1. The baseline distinguishes source verification from the PV_1 proofs
+still to construct.
+
 Time-box the first pass to roughly one or two weeks of available research
 time. Read the specified sections for exact statements and proof ingredients,
 not every paper in full. Use additional reading only to resolve a concrete
@@ -346,12 +353,12 @@ for completing the initial project.
 | D. Consolidate | Independently audit the note and check matching literature. | A coherent endpoint and an assessment of novelty, not an assumed publication. |
 | E. Optional extension | Choose one precise full-schema conversion or the Step 3 Liu-Pass audit. | A further theorem, reconstruction, or dependency table; not a commitment to finish both programs. |
 
-Before each gate or new proof attempt, record the target lemma, a time cap,
-a maximum additional token spend, and the remaining budget. Reserve resources
-for the final audit and writeup. At the cap, continue only if there is a
+Before each gate or new proof attempt, record the target lemma and a time
+cap. At the cap, continue only if there is a
 checked new step or a sharper obligation supporting a bounded next attempt;
-otherwise narrow or stop that branch. Keep total planned expenditure below
-the Section 1 limit. Record results against the outcome tree below.
+otherwise narrow or stop that branch. The researcher handles billing and
+the Section 1 budget; no assistant-maintained spending ledger or balance
+reconciliation is required. Record results against the outcome tree below.
 
 Learn additional bounded-arithmetic tools when a specific proof obligation
 requires them; use Krajicek's *Proof Complexity* (2019) and Buss's *Bounded
