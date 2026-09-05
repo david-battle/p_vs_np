@@ -478,9 +478,11 @@ concurrence of both reviewers. Gate D may begin.
 
 Not machine-checked; `check_step2.py` is a finite sanity check only.
 
-**Next:** the stop-or-explicit-extension decision in
-[gate_d_novelty.md](gate_d_novelty.md) Section 5. Gate D's first pass and
-bounded source-comparison audit are complete; the recommendation is to
-accept a coherent reconstruction endpoint, not automatically begin L2
-inside PV_1. The review cycle for T3' is closed (Section 7); do not reopen
-it absent a concrete new counterexample.
+**Closure (September 5, 2026):** Step 2 is closed as plan outcome 2g, a
+reconstruction endpoint, with both reviewers' concurrence; see the
+execution update in `modified_specific_recommendation.md` Section 5. Any
+further work is a deliberately chosen extension (L2 inside PV_1, a
+full-schema equivalence, or Liu-Pass), per
+[gate_d_novelty.md](gate_d_novelty.md) Section 5. The review cycle for T3'
+is closed (Section 7); do not reopen it absent a concrete new
+counterexample.

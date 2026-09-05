@@ -59,19 +59,23 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 
 ## Resume Here
 
-Read `gate_d_novelty.md` Sections 3, 5, and 6 first. Gate D's first-pass
-assessment and bounded independent source audit are complete: known
-separation machinery with an explicit incompressibility specialization;
-the exact arithmetic formulation was not located and novelty is not
-established. The recommendation is a coherent reconstruction endpoint.
-Next is the stop-or-explicit-extension decision in Section 5, not automatic
-L2-in-PV_1 work or another broad search.
+**Step 2 is closed as plan outcome 2g (reconstruction endpoint), with both
+reviewers' concurrence.** Read the Step 2 execution update in
+`modified_specific_recommendation.md` Section 5, then `gate_d_novelty.md`
+Sections 3 and 5. The conditional separation T3' stands at paper level
+under the residual assumptions in `step2_conditional_separation.md`
+Section 5; its review cycle (Section 7) is closed. Novelty is not
+established. There is no pending task: any further work is a deliberately
+chosen extension (L2 inside PV₁, a full-schema equivalence, or the
+Liu–Pass audit), to be time-boxed and justified against RSW22/ILW23/CLOW26
+before starting. `step1_decoder.md` Section 5.3 is the Step 1 result
+ledger; the Step 0 ledger is historical. Nothing depends on chat history.
 
-T3' remains accepted at paper level under the residual assumptions in
-`step2_conditional_separation.md` Section 5; its two-reviewer transfer
-review in Section 7 is closed. `step1_decoder.md` Section 5.3 remains
-the Step 1 result ledger; the Step 0 ledger is historical. Nothing depends
-on chat history.
+Lessons recorded from Steps 1-2: a reversal over `T_PV` suffices for a
+separation (nonprovability descends to subtheories), so an internal PV₁
+proof is only needed for a characterization; write finite check scripts
+early, since they caught two spec errors before review; and do the novelty
+check before, not after, investing in internal formalization.
 
 ## Operating norms
 

@@ -216,6 +216,23 @@ counting as a substitute for the required PV_1 proof.
 
 ## 5. Step 2: Prove the Reversals in Increasing Strength
 
+**Execution update (September 5, 2026): Step 2 closed as outcome 2g,
+reconstruction endpoint.** The priority target below is established at
+ordinary paper-proof level in
+[step2_conditional_separation.md](step2_conditional_separation.md): for one
+fixed standard `c_0`, `APC_1` proves `CInc_{c_0}` while neither `UAPC_1`
+nor `PV_1 + {Inc_c : c>=1}` proves it, under JLS-secure iO,
+`coNP not contained in i.o.NP/poly`, and the residual contracts in that
+note's Section 5. The reversal (bridge 2) was carried out over `T_PV`
+rather than inside `PV_1`; this suffices for the separation because
+nonprovability in `T^0_APC` descends to its subtheories. The
+`PV_1`-internal reversal (L2), the fixed-stretch target below, and the
+optional full-schema equivalences remain deferred extensions, not
+prerequisites. Novelty is not established
+([gate_d_novelty.md](gate_d_novelty.md)): the bridges are explicit in
+RSW22 and the separation mechanism in ILW23/CLOW26; the exact arithmetic
+formulation was not located. Both reviewers concur in this closure.
+
 ### Fixed-Stretch Target
 
 Use this construction as a proof template, specializing to Eval for the
