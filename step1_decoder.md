@@ -15,6 +15,12 @@ and its provability status labelled. What it is not: a checked PV_1
 derivation. Every "PV_1: routine" label is an expectation to be discharged,
 not a claim already verified.
 
+Astra correction pass, September 5, 2026, started 20:56 UTC: preserve the
+size resource, repair sentinel and clock conventions, state literal
+universal interfaces, and save all finite checks. Time cap: 60 minutes plus
+one bounded audit. The status ledger in Section 5.3 distinguishes the
+mathematical derivations from the remaining PV_1 and source-import work.
+
 ## 0. Conventions
 
 ### 0.1 Strings as numbers
@@ -29,11 +35,9 @@ Leading zeros of `s` are preserved. `0` is not the encoding of any string and
 serves as the universal failure value. For a number `S >= 1` write `str(S)`
 for the string it encodes and `len(S) = |S| - 1` for that string's length.
 
-Fact E1 (sentinel encoding). For all strings `s` and all `S >= 1`:
-`str(enc(s)) = s`, `enc(str(S)) = S`, `len(enc(s)) = |s|`, and
-`enc(s) < 2^(k+1)  iff  |s| <= k`.
-Status: true; PV_1: routine (open induction on notation over the standard
-PV definitions of `|.|`, `2^|.|`, and bit operations).
+The identities `str(enc(s))=s` and `enc(str(S))=S` explain the string
+notation; they are not themselves one-sorted PV formulas quantifying over
+a separate string sort. Fact E1 below uses only numbers and PV functions.
 
 A useful coincidence: the `(m+1)`-bit padded code `0^(m-|d|) 1 d` used by
 Korten's construction has numeric value `2^|d| + val(d) = enc(d)`. So
@@ -43,23 +47,68 @@ Korten's construction has numeric value `2^|d| + val(d) = enc(d)`. So
 
 ### 0.2 Length witnesses
 
-Bit lengths are supplied by numbers: `n = |N|`. Every function below reads
-`N` only through `|N|`; a running time of `|N|^c` steps is polynomial in the
-bit length of the input `N`, so such functions are PV functions. Binary `n`
-alone would not be an adequate resource. Write `Pad4(M)` for a PV term with
-`|Pad4(M)| = 4|M|` (for example `(1#M)^4 - 1`, with `1#M = 2^|M|`).
+Bit lengths are supplied by numbers: `n = |N|`, with the convention
+`|0|=0`. A computation taking `|N|^c` steps is polynomial in the input
+length when **N remains an input**, not when it is replaced by binary n.
+Semantic dependence only on `|N|` does not permit discarding that resource.
+
+Here are total PV terms used to expand the powers of two in this note.
+Subtraction is truncated at zero; division is integer division. The smash
+function is `A#B=2^(|A||B|)`, and `MSP(N,k)` is right shift, returning zero
+when `k>=|N|`. It runs in polynomial time even for a large binary shift k.
+
+| Name | PV definition | Value under the indicated guard |
+| --- | --- | --- |
+| `Pow(N)` | `1#N` | `2^|N|` |
+| `Ones(N)` | `Pow(N)-1` | the number represented by `|N|` ones |
+| `Top(S)` | `floor(Pow(S)/2)` | `2^(|S|-1)` for `S>=1`; zero at S=0 |
+| `Val(S)` | `S-Top(S)` | value of the encoded string for `S>=1` |
+| `Short(N)` | `2*Pow(MSP(N, |N|-floor(|N|/2)))` | `2^(floor(|N|/2)+1)` |
+| `A(N)` | `floor(Pow(N)/2)` | `2^(|N|-1)` for `|N|>=1` |
+| `H(N)` | `floor(Pow(N)/4)` | `2^(|N|-2)` for `|N|>=2` |
+| `Pad4(M)` | `Pow(M)^4-1` | length `4|M|`, including M=0 |
+| `Wrap(B)` | `Pow(B)+B` | sentinel around the canonical binary representation of number B |
+
+For invalid string code 0, set `len(0)=0`; otherwise `len(S)=|S|-1`.
+The string displays `enc` and `str` are explanatory notation; algorithms
+using them act on sentinel numbers via bit operations. Fixed powers such
+as `Pow(M)^4` are repeated multiplication. No unrestricted exponentiation
+function on a binary exponent is being introduced.
+
+Fact E1 (numeric encoding interface), universally closed:
+
+```text
+S>=1 -> Top(S)<=S and S<2*Top(S) and Val(S)<Top(S)
+         and S=Top(S)+Val(S);
+D>=1 -> (D<Short(N) <-> |D|<=floor(|N|/2)+1);
+Wrap(B)>=1 and |Wrap(B)|=|B|+1 and Val(Wrap(B))=B.
+```
+
+These are true quantifier-free PV matrices. Their PV_1 proofs from the
+standard bit-operation equations remain to be supplied. The related
+identity `|N|=|N'| -> Ones(N)=Ones(N')` will be denoted E0.
 
 ### 0.3 The machine and the simulation function
 
 Fix once and for all:
 
-- a universal machine `U` taking a description `d` and an optional auxiliary
-  string `z`, with a definite halting convention and a designated output
-  tape; `U(d,z)` "halts with output `x` within `t` steps" has the obvious
-  meaning; the auxiliary input is not charged to `|d|`;
+- a fixed deterministic efficient universal machine `U` taking a description
+  d and, in conditional mode, a separate raw auxiliary string z. For each
+  fixed program it has polynomial simulation overhead in the total input
+  length and simulated time. Its output stream is initially empty; a halt
+  returns exactly the bits written, including leading zeros. The clock
+  counts U's own steps, including parsing; z is not charged to `|d|`;
 - the CG pairing `pair(M,w) = dbl(M) || 01 || w` for two-part descriptions,
   `|pair(M,w)| = 2|M| + 2 + |w|`, with `M` nonempty; a description that does
-  not parse as a pair is treated by `U` as a non-halting computation.
+  not parse as a pair is treated by `U` as a non-halting computation. Pair
+  parsing reads doubled bits in aligned pairs until the delimiter `01`;
+  the payload may be empty. Invalid program codes also fail. No valid
+  description has length below 4.
+
+These are explicit requirements on U, not an assertion that mere
+universality implies efficient simulation. The following reasoning is for
+any fixed implementation satisfying them; no transition table or numerical
+program code is certified by this note.
 
 For each standard `c >= 1` define PV functions
 
@@ -75,12 +124,27 @@ CSim_c(D, Z, N)  = enc(x)  if D >= 1, Z >= 1, and U(str(D), str(Z)) halts
 
 The clock `(|N| + |Z|)^c` equals the plan's `(n + |z| + 1)^c` because
 `|Z| = |z| + 1`. Both functions are polynomial-time in `|D| + |Z| + |N|` and
-depend on `N` only through `|N|`.
+depend semantically on N only through its length.
+
+To obtain that invariance without losing the size resource, define them by
+
+```text
+Sim_c(D,N)    = Run_c(D, Ones(N));
+CSim_c(D,Z,N) = CRun_c(D,Z, Ones(N)).
+```
+
+`Run_c(D,W)` is the bounded simulation algorithm above with deadline
+`|W|^c`; `CRun_c(D,Z,W)` has deadline `(|W|+|Z|)^c`. The actual word W is
+retained as an input/resource for their PV implementations. Failed or
+malformed descriptions return zero, including `D<16` and invalid Z in the
+conditional case. The normalization uses `|Ones(N)|=|N|`, so it preserves
+the stated clocks exactly, not just up to a polynomial.
 
 Fact S0 (length-only dependence). `|N| = |N'|  ->  Sim_c(D,N) = Sim_c(D,N')`,
 and likewise for `CSim_c`.
-Status: true; PV_1: routine if `Sim_c` is defined by a PV term in which `N`
-occurs only inside `|N|`.
+Proof: equal lengths give equal `Ones` values by E0; congruence applied to
+the defining `Run_c`/`CRun_c` terms gives S0. A PV_1 proof therefore needs
+E0's elementary bit-arithmetic proof, not a theorem about U's behavior.
 
 ### 0.4 The target sentences
 
@@ -88,12 +152,12 @@ With `m(N) = floor(|N|/2)`:
 
 ```text
 Inc_c  :=  forall N [ |N| >= 4 ->
-             exists X ( |X| = |N|+1  and
-               forall D ( 1 <= D < 2^(m(N)+1)  ->  Sim_c(D,N) != X ) ) ]
+             exists X < 2*Pow(N) ( |X| = |N|+1  and
+               forall D < Short(N) ( D>=1 -> Sim_c(D,N) != X ) ) ]
 
 CInc_c :=  forall N forall Z [ |N| >= 4 and Z >= 1 ->
-             exists X ( |X| = |N|+1  and
-               forall D ( 1 <= D < 2^(m(N)+1)  ->  CSim_c(D,Z,N) != X ) ) ]
+             exists X < 2*Pow(N) ( |X| = |N|+1  and
+               forall D < Short(N) ( D>=1 -> CSim_c(D,Z,N) != X ) ) ]
 ```
 
 `|X| = |N|+1` says `str(X)` has length `n`; `1 <= D < 2^(m+1)` says `str(D)`
@@ -101,19 +165,51 @@ is a description of length at most `m`; `Sim_c(D,N) != X` says `U(str(D))`
 does not halt with output `str(X)` within `n^c` steps. Both sentences are
 `forall Sigma^b_2`. Write `Inc_c(N)` and `CInc_c(N,Z)` for the matrices.
 
-For circuits, fix an explicit encoding with a PV validity predicate
-`Circ(C, k, l)` ("C encodes a circuit with k inputs and l outputs") and a
-total PV evaluator `Eval(C, X)` returning `enc(C(str(X)))` when
-`Circ(C, len(X), l)` holds for some `l`, and `0` otherwise. Then
+For circuits, use the **native** numeric circuit codes underlying the ILW23
+sentence, rather than choosing an unrelated gate encoding. Denote its total
+PV evaluator by `NativeEval(B,u)` and the PV characteristic predicate for
+its circuit quantifier by `NativeCirc(B,k,l)`. These are local names for the
+source interface, not claimed names of symbols printed by ILW23. Valid
+native circuits have unique input/output arities, and their evaluation on
+`u<2^k` is a number below `2^l`, representing the output with width l.
+Section 4.4 isolates exactly what is imported and what is proved here.
+
+The raw auxiliary string is `z_C=str(C)`. To supply native circuit number B
+to the machine, set `C=Wrap(B)`, so `z_C` is B's canonical binary word and
+`|C|=|z_C|+1`. This wrapper includes B=0, whose canonical word is empty.
+Define
+
+```text
+Circ(C,k,l) := C>=1 and C=Wrap(Val(C)) and NativeCirc(Val(C),k,l).
+ell(k)     := 1 if k=0, else 4*k.
+Out(X)     := max(2, Top(X)^4).
+
+Eval(C,X):
+  if X=0 or not Circ(C,len(X),ell(len(X))), return 0;
+  v := NativeEval(Val(C),Val(X));
+  if v>=Out(X), return 0;
+  return Out(X)+v.
+```
+
+This evaluator is deliberately specialized to the required stretch and its
+zero-length repair. For positive k, `Out(X)=2^(4k)` when `len(X)=k`; for the
+empty input X=1, `Out(X)=2`. Thus its output is the sentinel of exactly the
+raw circuit-output bits. All output widths are supported by the **input X**,
+so no additional assumption that binary arities supply size resources is
+needed. The canonical-wrapper test is for circuit C only: arbitrary leading
+zeros in input/output strings must remain valid. Invalid cases return zero.
+
+The local avoidance sentence is
 
 ```text
 EvalAvoid_4 :=  forall M forall C [ |M| >= 1 and Circ(C, |M|, 4|M|) ->
-                  exists Y ( |Y| = 4|M|+1  and
-                    forall X ( |X| = |M|+1  ->  Eval(C,X) != Y ) ) ]
+                  exists Y < 2*Pow(M)^4 ( |Y| = 4|M|+1  and
+                    forall X < 2*Pow(M)
+                      ( |X| = |M|+1 -> Eval(C,X) != Y ) ) ].
 ```
 
-This is ILW23's `dWPHP_ell(Eval)` for `ell(m) = 4m` at positive lengths,
-under our encoding (see Assumption A-enc in Section 4.4).
+This has `forall Sigma^b_2` form. Section 4.4 proves the implication from
+this sentinel formulation to the native positive-length Eval sentence.
 
 ### 0.5 The pigeonhole schemata
 
@@ -135,26 +231,38 @@ exists v < 2^n  forall u < 2^(n-1)   f(u[,z]) != v.
 
 ## 1. Arithmetic Facts
 
-All are true; all are expected to be PV_1-routine.
+These are universally closed quantifier-free PV matrices, with all terms
+defined in Section 0.2. Their truth follows from the displayed bit
+constructions; their derivations in PV_1 are still to be supplied.
 
-- A1. For `n >= 4`: `m+1 <= n-1`, hence `2^(m+1) <= 2^(n-1)`.
-- A2. For `n >= 5`: `m+1 <= n-2`, hence `2^(m+1) <= 2^(n-2)`.
-- A3. For `1 <= D < 2^(m+1) <= 2^(n-2)`: `|2^(n-2) + D| = n-1` and
-  `(2^(n-2) + D) mod 2^(m+1) = D`.
-- A4. For `v < 2^n`: `X := 2^n + v` satisfies `|X| = n+1` and `X - 2^n = v`.
-- A5. `|Pad4(M)| = 4|M|`, and `floor(4|M|/2) = 2|M|`.
-- A6. For `m >= 1`: `2^m + 1 <= 2^(4m)`.
+```text
+A1: |N|>=4 -> Short(N)<=A(N) and 2*A(N)=Pow(N).
+A2: |N|>=5 -> Short(N)<=H(N) and 2*H(N)=A(N).
+A3: |N|>=5 and 1<=D<Short(N)
+      -> |H(N)+D|=|N|-1 and H(N)+D<A(N)
+         and (H(N)+D) mod Short(N)=D and |2*(H(N)+D)|=|N|.
+A4: v<Pow(N) -> |Pow(N)+v|=|N|+1 and (Pow(N)+v)-Pow(N)=v;
+    |X|=|N|+1 -> Pow(N)<=X and X<2*Pow(N) and Top(X)=Pow(N).
+A5: |Pad4(M)|=4*|M| and Short(Pad4(M))=2*Pow(M)^2
+      and Pow(Pad4(M))=Pow(M)^4.
+A6: |M|>=1 -> Pow(M)+1<=Pow(M)^4.
+```
+
+When proofs below use `n=|N|`, `m=floor(n/2)`, powers `2^n`, `2^(m+1)`,
+`2^(n-1)`, and `2^(n-2)` abbreviate respectively `Pow(N)`, `Short(N)`,
+`A(N)`, and `H(N)` under their guards. For the Eval proofs, `m=|M|` and
+`2^(4m)` abbreviates `Pow(M)^4`. They are not free binary-exponent terms.
 
 ## 2. Parameterized Decoders and the APC_1 Forward Direction
 
 ### 2.1 Definitions
 
 ```text
-Dec_c(N, u)     = Sim_c(u, N) - 2^|N|     if 1 <= u < 2^(m(N)+1)
+Dec_c(N, u)     = Sim_c(u, N) - Pow(N)     if 1 <= u < Short(N)
                                           and |Sim_c(u,N)| = |N|+1;
                 = 0                        otherwise.
 
-CDec_c(N, Z, u) = CSim_c(u, Z, N) - 2^|N|  if 1 <= u < 2^(m(N)+1), Z >= 1,
+CDec_c(N, Z, u) = CSim_c(u, Z, N) - Pow(N)  if 1 <= u < Short(N), Z >= 1,
                                            and |CSim_c(u,Z,N)| = |N|+1;
                 = 0                        otherwise.
 ```
@@ -186,7 +294,8 @@ sentence pays off: no separate simulation-correctness fact is needed.
 ### 2.3 Theorem F1 (APC_1 proves CInc_c and Inc_c, each fixed c)
 
 Claim: `PV_1 + dWPHP(CDec_c) proves CInc_c`, and
-`PV_1 + dWPHP(Dec_c) proves Inc_c`, modulo E1, S0, A1, A4, C1.
+`PV_1 + dWPHP(Dec_c) proves Inc_c`, modulo A1, A4, C1 and the defining
+equations. The parameterized proof does not need S0.
 
 Proof (conditional case). Fix `N` with `n = |N| >= 4` and `Z >= 1`.
 Instantiate `dWPHP(CDec_c)` with `a = 2^(n-1)`, `b = 1`, parameter `(N,Z)`:
@@ -204,8 +313,8 @@ is identical with `Dec_c`, `Sim_c`, and no `Z`.
 
 Status of the theorem: the logical skeleton is complete; each cited lemma is
 labelled PV_1-routine but not yet written out as a PV_1 derivation. Over
-`T_APC = T_PV + dWPHP(PV)` the theorem holds outright, since E1, S0, A1, A4,
-C1 are true universal sentences.
+`T_APC = T_PV + dWPHP(PV)` the derivation holds for the defined algorithms:
+A1, A4, C1 and their defining equations are true universal sentences.
 
 ## 3. Unary Decoder and the UAPC_1 Forward Direction
 
@@ -216,9 +325,10 @@ For each `c >= 1`, define the parameter-free PV function
 ```text
 f_c(u):
   n := |u| + 1;  if n < 5, return 0;
-  m := floor(n/2);  D := u mod 2^(m+1);  if D = 0, return 0;
-  S := Sim_c(D, 2u);                       -- |2u| = n serves as length witness
-  if |S| = n+1, return S - 2^n;  else return 0.
+  W := 2*u;                           -- |W|=n, since u is nonzero here
+  D := u mod Short(W);  if D = 0, return 0;
+  S := Sim_c(D,W);
+  if |S| = n+1, return S-Pow(W);  else return 0.
 ```
 
 `f_c` reads its length information from `|u|`; it takes no `N`, clock, or
@@ -240,25 +350,37 @@ Proof. By A2, `D < 2^(m+1) <= 2^(n-2)`, so by A3 `|u_D| = n-1` and
 `u_D mod 2^(m+1) = D`; also `u_D < 2^(n-1)`. Unfolding `f_c(u_D)`: it
 computes `n' = |u_D|+1 = n >= 5`, `m' = m`, `D' = D != 0`, then
 `S = Sim_c(D, 2u_D)`. Since `|2u_D| = n = |N|`, S0 gives
-`S = Sim_c(D,N) = X`, and `|S| = n+1`, so `f_c(u_D) = X - 2^n`.
+`S = Sim_c(D,N) = X`. Equal lengths also give
+`Short(2u_D)=Short(N)` and `Pow(2u_D)=Pow(N)` by their definitions, so the
+actual modulus and subtraction in f_c agree with those in C2. Since
+`|S|=n+1`, its value is `X-2^n`.
 Status: true; PV_1: routine given E1, S0, A2, A3.
 
 ### 3.3 The finite case n = 4
 
-For each `c`, there are `2^3 - 1 = 7` descriptions of length at most 2 and
-`16` strings of length 4, so some 4-bit string `x_{4,c}` is not the output of
-any of them within `4^c` steps. Let `X_{4,c} := enc(x_{4,c})`, a numeral.
+The chosen pair syntax makes this case simpler than counting: every
+description of length at most 2 is malformed, because even a nonempty
+one-bit program and an empty payload require 4 description bits. The
+bounded runner rejects these descriptions for every c. Use the single
+fixed witness `X_4=16=enc(0000)`, independent of c.
 
-Lemma L0_c. `forall N forall D [ |N| = 4 and 1 <= D < 8 -> Sim_c(D,N) != X_{4,c} ]`.
-Status: true (by choice of `x_{4,c}`); universal with PV matrix, hence an
-axiom of `T_PV`; PV_1: provable, since for `|N| = 4` the matrix reduces by
-S0 to 7 closed true PV inequations.
+Lemma L0_c, universally closed:
+
+```text
+|N|=4 and 1<=D<8 -> Sim_c(D,N)=0 and Sim_c(D,N)!=16.
+```
+
+Its truth follows from the explicit malformed-description branch; the
+same branch gives a PV_1 proof once the runner's defining equations are
+installed. No large-clock computations or unknown witness numerals are
+required. For a different description syntax, the earlier seven-versus-
+sixteen finite-counting argument remains a fallback, not a needed premise.
 
 ### 3.4 Theorem F2 (UAPC_1 proves Inc_c, each fixed c)
 
 Claim: `PV_1 + dWPHP'(f_c) proves Inc_c`, modulo E1, S0, A2-A4, C2, L0_c.
 
-Proof. Fix `N`, `n = |N| >= 4`. If `n = 4`, take `X := X_{4,c}`; L0_c gives
+Proof. Fix `N`, `n = |N| >= 4`. If `n = 4`, take `X := 16`; L0_c gives
 the required `forall D`. If `n >= 5`, instantiate `dWPHP'(f_c)` with
 `a = 2^(n-1)`, `b = 1`:
 
@@ -278,52 +400,92 @@ Over `T^0_APC` the theorem holds outright (Section 4).
 Astra's correction 3 applies throughout: `T_PV` is stronger than `PV_1`. What
 this route removes is the obligation to *derive* the correctness lemmas
 inside PV_1; it does not remove the obligation to make them *true*, which
-depends on the concrete definitions of `U`, `E`, `c_0`, `M_0` in Section 5.
+depends on the machine contract and algorithm definitions. Below we give
+mathematical truth arguments for those definitions, not a machine-checked
+implementation or a proof for an arbitrary inefficient universal machine.
 
 ### 4.1 Universal lemmas with guards
 
-Each of the following has the form `forall (quantifier-free PV)`, so if true
-it is an axiom of `T_PV`.
+Each displayed matrix is quantifier-free over the named PV functions and
+is universally closed. Once its truth is established for those functions,
+its universal closure is an axiom of `T_PV`.
 
-- **L0_c** (Section 3.3): for each `c >= 1`.
-- **L1_c** (= C2 restated): for each `c >= 1`,
-  ```text
-  forall N, D, X [ |N| >= 5 and 1 <= D < 2^(m(N)+1) and |X| = |N|+1
-                   and Sim_c(D,N) = X
-                   ->  2^(|N|-2) + D < 2^(|N|-1)
-                       and f_c(2^(|N|-2) + D) = X - 2^|N| ].
-  ```
-  Guards: `n = |N| >= 5`; `D` a valid description encoding of length at most
-  `m`; `X` an exactly-n-bit output (the decoder rejects other lengths).
-- **L2** (evaluator bridge). Fix a program `E` such that `U(pair(E,x'), C)`
-  halts with output `C(x')` whenever `Circ(C, |x'|, l)`; let
-  `P(X') := enc(pair(E, str(X')))`, a PV term. Fix `M_0 := 2|E| + 2` and a
-  constant `c_0` such that the running time of `U` on `pair(E,x')` with
-  auxiliary `C` is at most `(4|x'| + |C| + 1)^{c_0}` for all `|x'| >= 1`
-  (possible since evaluation plus universal simulation is polynomial in
-  `|x'| + |C|`). Then
-  ```text
-  forall M, C, X' [ |M| >= M_0 and Circ(C, |M|, 4|M|) and |X'| = |M|+1
-                    ->  1 <= P(X') < 2^(2|M|+1)
-                        and CSim_{c_0}(P(X'), C, Pad4(M)) = Eval(C, X') ].
-  ```
-  Guards: exact arities `|M| -> 4|M|`; `|X'|` exactly `m+1`; `|M| >= M_0`
-  ensures `|pair(E,x')| = 2|E| + 2 + m <= 2m = floor(4m/2)`, i.e.
-  `P(X') < 2^(2m+1)`. The clock: `(|Pad4(M)| + |C|)^{c_0} = (4m + |C|)^{c_0}`,
-  and `|C| >= |z_C| + 1` gives `4m + |C| >= 4m + |z_C| + 1`, so the bound
-  on `U`'s running time applies.
-- **L3** (finite-length repair). Let `R(C)` be the PV function that, when
-  `Circ(C, k, 4k)` for some `1 <= k < M_0`, evaluates `C` on all `2^k` inputs
-  and returns the encoding of the first `4k`-bit string (in some fixed order
-  of `2^k + 1 <= 2^(4k)` candidates, A6) not among the outputs; `0`
-  otherwise. Since `k < M_0` is a constant bound, `R` is polynomial-time.
-  ```text
-  forall M, C, X' [ 1 <= |M| < M_0 and Circ(C, |M|, 4|M|) and |X'| = |M|+1
-                    ->  |R(C)| = 4|M|+1  and  Eval(C, X') != R(C) ].
-  ```
+**L0_c** is the explicit malformed-description lemma from Section 3.3.
 
-Also needed as `T_PV` axioms: E1, S0, A1-A6, and the trivial zero-length
-Eval instance in 4.4. All are true universal PV sentences.
+**L1_c** (= C2) is
+
+```text
+forall N,D,X [ |N|>=5 and 1<=D<Short(N) and |X|=|N|+1
+               and Sim_c(D,N)=X
+               -> H(N)+D<A(N) and f_c(H(N)+D)=X-Pow(N) ].
+```
+
+Its proof is C2 with the resource-preserving definition of S0. The guard
+means D encodes a short string, not necessarily a well-formed program;
+malformed programs cannot satisfy the successful-simulation antecedent.
+
+**Evaluator program and clock for L2.** Fix a nonempty program code E for
+the following algorithm. On payload x' and raw auxiliary string z, read
+`m=|x'|` and the number B represented by z; check z is the canonical word
+for B and `NativeCirc(B,m,ell(m))`; compute
+`v=NativeEval(B,val(x'))`; check its output bound and write exactly
+`ell(m)` raw output bits, left-padded with zeros. Halt. Invalid cases may
+halt with the empty output. In particular E does **not** write a sentinel.
+On valid cases, U's output is precisely the string whose sentinel is
+`Eval(Wrap(B),enc(x'))`.
+
+Set `M_0=2|E|+2`. The evaluator algorithm is polynomial-time in
+`s=m+|z|+1`; output padding costs O(m). Including U's fixed-program
+simulation and parsing overhead, choose integers `K>=1, d>=1` so the
+runtime on valid cases with `m>=1` is at most `K*s^d`. Fix
+
+```text
+c_0 = d + ceil(log_2 K).
+```
+
+For `C=Wrap(B)`, `z=z_C=str(C)`, let `r=4m+|C|`. Then
+`s=m+|z_C|+1=m+|C|<=r` and `r>=2`, so
+`K*s^d <= K*r^d <= r^c_0`. This is exactly the deadline
+`(|Pad4(M)|+|C|)^c_0`, not a clock with an extra bit. K, d, E, and c_0
+are fixed standard constants depending on the chosen U and native
+algorithms; the theorem requires their existence, not a particular numeral
+for c_0. A certified concrete implementation would need actual bounds.
+
+Define the total PV function `P(X')` by constructing the sentinel of
+`pair(E,str(X'))` for `X'>=1`, and returning 0 at `X'=0`. L2 is
+
+```text
+forall M,C,X' [ |M|>=M_0 and Circ(C,|M|,4|M|) and |X'|=|M|+1
+                -> 1<=P(X')<Short(Pad4(M))
+                   and CSim_{c_0}(P(X'),C,Pad4(M))=Eval(C,X') ].
+```
+
+Proof of truth: with `m=|M|`, the pair length is `M_0+m<=2m`.
+E's correctness gives exactly the raw output represented by `Eval(C,X')`,
+the preceding bound puts the halt within the CSim deadline, and CSim adds
+the single sentinel. All width, validity, and clock guards are explicit.
+This is an external simulation argument. It is not a PV_1 simulation proof.
+
+**L3 (finite-length repair).** For the fixed `M_0`, R tries the finitely
+many `k=1,...,M_0-1`. If `Circ(C,k,4k)` holds, it evaluates all inputs
+`X'=2^k+i`, `0<=i<2^k`, and returns the first candidate
+`2^(4k)+j`, `0<=j<=2^k`, not among those outputs. If no such valid arity is
+found, return 0; totalize any unexpected missing-candidate branch by 0 too.
+Every exponent in this algorithm is bounded by the fixed constant `4M_0`.
+Thus it runs in polynomial time in `|C|` even for arbitrarily large C.
+Native arity uniqueness ensures the chosen k is the one in the guard.
+
+```text
+forall M,C,X' [ 1<=|M|<M_0 and Circ(C,|M|,4|M|) and |X'|=|M|+1
+                -> |R(C)|=4|M|+1 and Eval(C,X')!=R(C) ].
+```
+
+Proof of truth: at most `2^k` evaluated values cannot cover the `2^k+1`
+distinct candidates, which are valid 4k-bit strings by A6. This is finite
+counting for a fixed constant range of k, not enumeration of all circuits.
+
+E0, E1, S0, A1-A6, the defining equations, and Section 4.4's wrapper and
+zero-length lemmas supply the other true universal sentences used below.
 
 ### 4.2 Theorem T1: `T^0_APC proves Inc_c` for every `c >= 1`
 
@@ -346,26 +508,73 @@ CSim_{c_0}(D, C, N) != X)`. Set `Y := X`. Suppose `|X'| = m+1` and
 Case `1 <= m < M_0`. Set `Y := R(C)`. L3 gives `|Y| = 4m+1` and
 `Eval(C, X') != Y` for every `X'` with `|X'| = m+1`.
 
-Both cases are provable in `T^0_APC` (the case split is on `|M| >= M_0`,
-decidable). This uses `CInc_{c_0}` only at the single exponent `c_0`.
+Together these cases prove EvalAvoid_4 in `T^0_APC + CInc_{c_0}`. The
+large-length case uses the added conditional-incompressibility sentence;
+the small-length case does not. Only the single exponent c_0 is used.
 
 ### 4.4 Theorem T3 (conditional separation)
 
-Assumption A-enc. ILW23's `dWPHP_ell(Eval)` (their Section 4.1) is
-formalized with our `Circ`/`Eval`, or with any encoding from which ours is
-obtained by a PV_1-provable translation. ILW23 do not fix a bit-level
-encoding; their Theorem 24 proof (KPT witnessing plus the iO construction)
-does not depend on the encoding beyond standard efficiency properties. This
-is a modelling assumption and is recorded as such.
+**Explicit source interface, replacing A-enc.** Use the native symbols of
+Section 0.4 consistently in the native sentence
 
-Zero-length instance. With `ell_*(m) = max(1, 4m)`, ILW23's sentence at
-`|M| = 0` says: for every circuit `C` with 0 inputs and 1 output there is a
-1-bit string not equal to `C(empty)`. `PV_1` proves it with witness
-`1 - Eval(C, 1)` (the encoding of the empty input is `1`). Hence, over
-`PV_1`, `dWPHP_{ell_*}(Eval)` is equivalent to `EvalAvoid_4`.
+```text
+NativeAvoid_4:
+  forall M,B [ |M|>=1 and NativeCirc(B,|M|,4|M|)
+    -> exists y<Pow(M)^4 forall u<Pow(M), NativeEval(B,u)!=y ].
+```
 
-Theorem T3. Assume JLS-secure iO exists and `coNP` is not contained in
-`i.o.NP/poly` (ILW23 Theorem 24's hypotheses), and A-enc. Then
+The following universal lemmas express the wrapper, not an assumed
+invariance under arbitrary efficient encodings:
+
+```text
+W1: Circ(Wrap(B),k,l) <-> NativeCirc(B,k,l).
+W2: |M|>=1 and NativeCirc(B,|M|,4|M|) and u<Pow(M)
+     -> Eval(Wrap(B),Pow(M)+u)=Pow(M)^4+NativeEval(B,u).
+W3: |Y|=4|M|+1 -> Val(Y)<Pow(M)^4 and Y=Pow(M)^4+Val(Y).
+```
+
+W1 follows from `Val(Wrap(B))=B`. W2 follows from A4, the local evaluator's
+definition, and native evaluation's output-range property. W3 is the
+sentinel identity applied at the resource `Pad4(M)`. These are true
+universal PV sentences for the specified native interface, so they can be
+used in T_PV without claiming PV_1 proofs.
+
+**Wrapper implication in T_PV.** Given a valid native B at length `m=|M|`,
+apply local EvalAvoid_4 to `C=Wrap(B)` using W1. For the resulting witness
+Y, take `y=Val(Y)`. W3 gives the native output bound. For any `u<Pow(M)`,
+take `X=Pow(M)+u`; it is a valid encoded m-bit input. If
+`NativeEval(B,u)=y`, W2 and W3 imply `Eval(C,X)=Y`, a contradiction.
+Thus `T_PV proves EvalAvoid_4 -> NativeAvoid_4`.
+
+**Zero-length repair.** Under `Circ(C,0,1)`, `Eval(C,1)` is 2 or 3, so
+the corrected encoded witness is `Y=5-Eval(C,1)`. The universal matrix
+
+```text
+Circ(C,0,1) -> |5-Eval(C,1)|=2 and 5-Eval(C,1)!=Eval(C,1)
+```
+
+is true. For a native circuit B, this yields the raw witness
+`1-NativeEval(B,0)` by W1 and the evaluator definition. Consequently T_PV
+proves that local EvalAvoid_4 implies the full native sentence with
+`ell_*(m)=max(1,4m)`, including zero. The old expression `1-Eval(C,1)`
+confused a raw bit with a sentinel and is not used. A PV_1 proof of this
+interface remains a separate, stronger formalization task.
+
+**Source-binding check still to sign off.** ILW23 Section 4.1, p. 13,
+quantifies over exact-arity circuits and uses its own PV evaluator. Its
+Section 2.3, p. 8, supplies the length witness; Appendix D, p. 29, explicitly
+uses numeric interval representations of strings. Theorem 27's proof,
+p. 18, treats circuit-description length as the resource. These support
+the native interface used above, but the paper does not give a bit-level
+circuit code or name its validity predicate. The remaining import check is
+that `NativeCirc` describes exactly that circuit domain, with unique
+arities, and that `NativeEval` uses those fixed input/output widths. No
+bound `|B|<=m^k` may be introduced. This is a precise source-formalization
+obligation, not an extra cryptographic assumption or an arbitrary-coding
+equivalence. No separate gate representation needs to be invented here.
+
+Theorem T3 (subject to that source binding). Assume JLS-secure iO exists and
+`coNP` is not contained in `i.o.NP/poly`, as in ILW23 Theorem 24. Then
 
 ```text
 T^0_APC  does not prove  CInc_{c_0},
@@ -374,48 +583,61 @@ T^0_APC  does not prove  CInc_{c_0},
 and therefore neither does its subtheory `PV_1 + {Inc_c : c >= 1}`. In
 particular `UAPC_1` does not prove `CInc_{c_0}`.
 
-Proof. By Theorem 24 with the constructive stretch `ell_*`,
-`T^0_APC` does not prove `dWPHP_{ell_*}(Eval)`, hence (zero-length instance)
-does not prove `EvalAvoid_4`. By T2, if `T^0_APC` proved `CInc_{c_0}` it would
-prove `EvalAvoid_4`. So it does not. By T1, `PV_1 + {Inc_c} subset T^0_APC`,
-and `UAPC_1 subset T^0_APC` by definition.
+Proof. By Theorem 24 with the constructive stretch `ell_*`, `T^0_APC`
+does not prove the full native avoidance sentence. By T2 and the wrapper
+implication plus zero-length repair, proving `CInc_{c_0}` would prove that
+native sentence. By T1, `PV_1 + {Inc_c}` is contained in `T^0_APC`; so is
+UAPC_1. The nonprovability descends to both subtheories.
 
-Status of T3: complete as a derivation, conditional on (i) the truth of L0-L3
-for the concrete `U`, `E`, `c_0`, `M_0` fixed in Section 5, (ii) A-enc,
-(iii) ILW23 Theorem 24 as cited. Nothing here has been checked for novelty.
+Status: the logical deduction and explicit wrapper implication are written
+out. The truth arguments for L0-L3 use the specified efficient-machine and
+native-evaluator contracts. The source binding still needs independent
+sign-off; PV_1 derivations and certified concrete implementations have not
+been supplied. Do not label this a completed Gate B or an independently
+verified new separation. Nothing here has been checked for novelty.
 
 Remark (what T3 does and does not say). It says that ordinary
 incompressibility sentences, even all of them together over `PV_1`, do not
 yield conditional incompressibility at exponent `c_0`, under ILW23's
 hypotheses. It does not say anything about `PV_1` versus `UAPC_1`, and it
 does not use or establish any full-schema equivalence. The positive
-counterpart `APC_1 proves CInc_{c_0}` is F1 (over `T_APC` it is immediate).
+counterpart in APC_1 is F1, pending its listed PV_1 derivations; the
+counterpart over T_APC is established by the true-universal argument.
 
-## 5. What Remains for PV_1 and for the Concrete Definitions
+## 5. Status, Verification, and Handoff
 
-### 5.1 Concrete definitions still to be pinned (D1)
+### 5.1 What is fixed, and what is not
 
-- The machine `U`: tape alphabet, halting state, output-tape convention,
-  parsing of `pair(M,w)`, behaviour on malformed descriptions (non-halting),
-  handling of the auxiliary tape. Any standard efficient universal machine
-  works; the choice fixes `E`, `M_0`, `c_0`.
-- `Sim_c` and `CSim_c` as PV terms with `N` occurring only inside `|N|`
-  (this makes S0 syntactic).
-- `Circ`, `Eval`, and the circuit encoding; `Pad4`.
-- The evaluator program `E` and the constants `M_0 = 2|E| + 2` and `c_0`.
-- The numerals `X_{4,c}` (computable by brute force for each `c`).
+- Fixed here: total bit/resource terms; literal bounded Inc/CInc sentences;
+  canonical-resource simulation definitions; parameterized and unary
+  decoders; the fixed witness 16 at n=4; native/sentinel circuit wrappers;
+  E's algorithm and a formula choosing one clock exponent from its runtime
+  bound; and R's finite search algorithm.
+- Parameterized rather than implemented here: the efficient U and its
+  bounded-runner PV symbols, the source's native evaluator/validity symbols,
+  and the standard constants describing their implementations. The
+  mathematical arguments apply to any fixed realization satisfying the
+  explicit contracts. No exact transition table or gate-code implementation
+  is claimed to have been checked.
+- Still required for Gate B: install the relevant PV defining equations
+  and prove the elementary resource/encoding facts there. S0 then follows
+  by congruence; it no longer rests on an impossible syntactic restriction.
+- Still required for the imported separation: independently sign off the
+  source binding in Section 4.4. The wrapper implication itself is explicit.
 
-Once these are fixed, L0-L3 are concrete true-or-false universal sentences;
-their truth is a finite check (L0), a definition-unfolding (L1), and the
-standard correctness of `E` plus a polynomial bound (L2, L3).
+Choosing a particular numerical value of c_0 is not needed for the theorem
+that **some fixed standard exponent** works. It would be needed to identify
+one numerically indexed sentence for a particular implemented U. Do not
+confuse that implementation task with the existential metatheorem.
 
 ### 5.2 PV_1 obligations, by theorem
 
 | Theorem | PV_1 lemmas needed | Expected difficulty |
 | --- | --- | --- |
-| F1 (`APC_1 proves Inc_c, CInc_c`) | E1, S0, A1, A4, C1 | Routine: encoding identities and definition unfolding. No simulation correctness. |
-| F2 (`UAPC_1 proves Inc_c`) | E1, S0, A2-A4, C2, L0_c | Routine, plus 7 closed evaluations for `n = 4`. No simulation correctness. |
-| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | A5, A6, L2, L3 in PV_1 | L2 is the real work: PV_1 must prove that `U` correctly simulates the fixed program `E` within the clock. This is the standard "PV_1 formalizes polynomial-time computation for a fixed machine" fact (cf. CG Lemma 2.12 for VPV), but must be carried out for our `U`. L3 is a constant-size case analysis. |
+| F1 (`APC_1 proves Inc_c, CInc_c`) | A1, A4, C1, defining equations | Encoding identities and definition unfolding. S0 and simulation correctness are not needed. |
+| F2 (`UAPC_1 proves Inc_c`) | E0/S0, A2-A4, C2, L0_c, defining equations | Canonical resource identity, bit arithmetic, and the explicit malformed-description branch. No large finite computations. |
+| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | A5, A6, L2, L3 in PV_1 | The substantial additional obligation is proving the fixed-program simulation and clock bound of L2 inside PV_1. L3 has a constant bound on input width, not on circuit size. |
+| Local EvalAvoid implies the native sentence in PV_1 | E1, A4-A5, W1-W3, native evaluation contract, zero-length identity | T_PV already permits the true universal identities. Their PV_1 versions must be proved rather than imported from T_PV. |
 
 The notable outcome of Sections 2-3: the forward directions need **no**
 universal-simulation correctness lemma, because the decoders are defined
@@ -426,12 +648,17 @@ simulation correctness enters is L2, i.e. the reversal.
 
 | Result | Status | Remaining |
 | --- | --- | --- |
-| T1: `T^0_APC proves Inc_c`, all c | derivation complete modulo truth of L0_c, L1_c | pin `U`, `Sim_c`; verify L0_c by computation, L1_c by unfolding |
-| T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | derivation complete modulo truth of L2, L3 | pin `U`, `E`, `c_0`, `M_0`, `Circ`, `Eval`; verify L2 (correctness + clock), L3 (constant cases) |
-| T3: conditional separation | complete modulo T1, T2, A-enc, ILW23 Thm 24 | as above; novelty unassessed |
-| F1: `APC_1 proves Inc_c, CInc_c` | skeleton complete; PV_1 lemmas labelled routine | write E1, S0, A1, A4, C1 as PV_1 derivations |
-| F2: `UAPC_1 proves Inc_c` | skeleton complete; PV_1 lemmas labelled routine | write E1, S0, A2-A4, C2, L0_c as PV_1 derivations |
-| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | proof to reconstruct | L2 in PV_1 (fixed-machine simulation correctness) |
+| T1: `T^0_APC proves Inc_c`, all c | Mathematical derivation with explicit true-universal lemmas for the specified runner | Independent review of the resource terms and defining equations; no machine-checked implementation |
+| T2: `T^0_APC + CInc_{c_0} proves EvalAvoid_4` | Mathematical derivation for the efficient-U/native-evaluator contracts; E, clock choice, and finite repair are specified | Review those contracts and L2/L3's truth arguments |
+| Local EvalAvoid_4 implies native avoidance in T_PV | Explicit wrapper proof W1-W3 plus corrected zero-length repair | Source-symbol/domain identification, not arbitrary-coding invariance |
+| T3: conditional separation | Deduction from T1, T2, the wrapper, and ILW23; source binding still to sign off | Do not yet mark independently verified; novelty unassessed |
+| F1: `APC_1 proves Inc_c, CInc_c` | Proof skeleton complete | PV_1 proofs of A1, A4, C1 using actual defining equations |
+| F2: `UAPC_1 proves Inc_c` | Proof skeleton complete | PV_1 proofs of E0/S0, A2-A4, C2, L0_c |
+| `PV_1 + CInc_{c_0} proves EvalAvoid_4` | Proof to reconstruct internally | L2/L3 and elementary identities in PV_1 |
+
+**Current endpoint:** the earlier errors are repaired and the T_PV-level
+arguments have explicit algorithms and interfaces. Step 1 remains partial
+under the modified plan's requirement for checked PV_1 forward proofs.
 
 ### 5.4 Finite checks performed
 
@@ -443,65 +670,48 @@ Run it from the repository root:
 python3 check_step1.py
 ```
 
-It uses only the Python standard library and a seeded, total stand-in for
-`Sim_c` whose nonzero outputs are sentinel-encoded strings. It checks the
-padded-code/sentinel coincidence and encoding recovery for `m <= 7`;
-length invariance, A1-A4, and the C1/C2 coverage implications for `n=4..14`;
-existence of an avoided 4-bit string for seven descriptions; Pad4's length;
-A6; and the `M_0=2|E|+2` threshold for program lengths 1 through 5.
-The original run counted 417 instances satisfying C1's antecedent; C2 is
-checked on the subset with `n >= 5`. The script prints the current counts.
+It uses only the Python standard library. It retains the original seeded
+abstract simulation check (417 C1 instances, 412 C2 instances), now through
+the canonical resource, and checks the literal bit terms on 4,096 resource
+values and 24,532 unary preimage/resource identities. It also checks invalid short
+pair descriptions, conditional decoding, the clock-exponent inequality,
+and the native/sentinel wrapper on small finite circuit tables. The
+zero-length cases remain as regressions: the old raw-bit expression is
+rejected and `5-Eval(C,1)` produces the correct encoded complement.
 
-The final two cases reproduce the erroneous zero-length witness in Section
-4.4 and check its encoded replacement. They are explicitly reported as
-`KNOWN NOTE ERROR`, not a successful verification of the current formula.
-The script does not implement U, establish L2's runtime bound, verify the
-ILW23 encoding translation, or prove any PV_1 theorem. Finite tests support
-the arithmetic checks; the general coverage arguments are Sections 2-3's
-definition-unfolding proofs, not conclusions established by random testing.
+The abstract simulator deliberately exercises more output behaviors than
+the actual malformed-program runner; it is not an implementation of U.
+The small native tables test the wrapper algebra, not ILW23's circuit
+encoding. The clock tests check absorption of a supplied polynomial bound,
+not the existence of that bound for an implemented E. The script does not
+prove PV_1 derivability, certify U, or discharge the source-binding check.
 
-### 5.5 Astra Review: Corrections Still Required
+### 5.5 Corrections from the first review
 
-This review found no obstruction to the proof architecture, but the
-following issues prevent treating the note as a completed proof:
+The review snapshot and executable counterexamples are preserved in git.
+This pass replaces the false syntactic length restriction by canonical
+resources (Section 0.3), fixes the zero-length sentinel (Section 4.4),
+specifies the raw auxiliary string and exact clock absorption (L2), and
+replaces A-enc by a native-symbol wrapper with an explicit implication.
+L0 now has the constant witness 16 from pair syntax, rather than seven
+unspecified computations for every c. The literal PV term table and
+bounded quantifiers remove the earlier unrestricted-exponent metanotation.
 
-- **S0's proposed syntactic implementation loses the size resource.** A PV
-  term with N occurring only as the binary number `|N|` factors through
-  inputs of length `|D|+O(log |N|)`. It cannot generally produce the long
-  simulation outputs allowed here. Keep N as a resource argument. For
-  example, define a PV canonicalizer `Ones(N)` with value `2^|N|-1`, using
-  N as its construction resource, and define simulation through a bounded
-  runner on `Ones(N)`. Equal lengths give equal canonical resources and
-  hence S0 by congruence. Semantic length dependence is valid; it does not
-  imply the syntactic restriction asserted in Sections 0.3 and 5.1.
-- **The zero-length witness is incorrectly encoded.** For a valid
-  zero-input, one-output circuit, `Eval(C,1)` is 2 or 3. The expression
-  `1-Eval(C,1)` is therefore not an encoded output string. Under
-  `Circ(C,0,1)`, use `5-Eval(C,1)`, which swaps 2 and 3. The saved script
-  exhibits both cases.
-- **L2 must distinguish the circuit string from its sentinel.** Declare
-  `C=enc(z_C)`, require `Circ` to imply `C>=1`, and specify
-  `U(pair(E,x'),z_C)`. Prove its runtime is bounded by
-  `(4m+|z_C|+1)^c_0 = (4m+|C|)^c_0`. A bound with an additional `+1` in
-  the encoded-number expression does not imply this at the same exponent.
-  E must write the raw circuit-output bits; CSim supplies the sentinel.
-- **The universal-axiom and source-translation interfaces remain to be
-  written.** E1 and A1-A6 use string and exponent notation that must be
-  replaced by actual PV terms with length witnesses. A-enc must establish
-  the implication from this note's Eval-avoidance sentence to the sentence
-  covered by ILW23, not just assert that both encodings are efficient.
-
-The review included an independent check of the proof skeleton and the
-finite zero-length counterexamples. It did not repeat the primary-source
-literature check. The mathematical statements above have not been silently
-changed; these are explicit corrections for the next editing pass.
+A bounded independent audit found no blocking mathematical error under
+the stated contracts. Its two status-wording findings were corrected:
+T2's large-length branch requires the added CInc sentence, and F1 is not
+yet a checked APC_1 proof. The audit does not discharge source binding or
+the remaining PV_1 obligations. Its expanded finite resource/preimage
+checks are included in the saved script, not left only in the transcript.
 
 ### 5.6 Suggested next actions
 
-1. Independent check of Sections 2-4 for quantifier, guard, and length
-   errors (Astra).
-2. D1: write the concrete `U`, `Sim_c`, `Circ`, `Eval` definitions and fix
-   `E`, `M_0`, `c_0`; then state L0-L3 with the concrete constants and
-   confirm their truth.
-3. Only then: PV_1 derivations for F1/F2 (routine) and for L2 (the real
-   obligation), in that order.
+1. Review E0/S0, the literal bit terms, W1-W3, the clock choice, and the
+   source binding. Decide whether the paper-level T_PV derivation is
+   acceptable for the explicitly specified implementation class.
+2. For Gate B, select the concrete PV definitions/basis and discharge the
+   elementary F1/F2 obligations. Do not relabel expected proofs as checked
+   merely because the T_PV derivations are available.
+3. If continuing to PV_1 reversals, formalize L2's fixed-program simulation
+   and L3 there. Keep this distinct from importing the negative theorem and
+   from any claim of novelty.
