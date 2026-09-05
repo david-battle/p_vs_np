@@ -435,15 +435,68 @@ simulation correctness enters is L2, i.e. the reversal.
 
 ### 5.4 Finite checks performed
 
-A Python check (not stored) verified for `n = 4..14`: the padded-code /
-sentinel-encoding coincidence and E1 for `m <= 7`; A1-A3, A6; C1 and C2 on
-417 covered instances against an arbitrary stand-in for `Sim_c` (random
-partial function depending on `N` only via `|N|`), confirming that the
-coverage lemmas are definition-unfolding facts independent of what `Sim_c`
-computes; existence of an avoided 4-bit string for 7 descriptions; and the
-`M_0 = 2|E| + 2` threshold for `|E| = 1..5`. These are not PV_1 proofs.
+The transcript's Python check has been reconstructed in
+[check_step1.py](check_step1.py), with additional checks from Astra's review.
+Run it from the repository root:
 
-### 5.5 Suggested next actions
+```sh
+python3 check_step1.py
+```
+
+It uses only the Python standard library and a seeded, total stand-in for
+`Sim_c` whose nonzero outputs are sentinel-encoded strings. It checks the
+padded-code/sentinel coincidence and encoding recovery for `m <= 7`;
+length invariance, A1-A4, and the C1/C2 coverage implications for `n=4..14`;
+existence of an avoided 4-bit string for seven descriptions; Pad4's length;
+A6; and the `M_0=2|E|+2` threshold for program lengths 1 through 5.
+The original run counted 417 instances satisfying C1's antecedent; C2 is
+checked on the subset with `n >= 5`. The script prints the current counts.
+
+The final two cases reproduce the erroneous zero-length witness in Section
+4.4 and check its encoded replacement. They are explicitly reported as
+`KNOWN NOTE ERROR`, not a successful verification of the current formula.
+The script does not implement U, establish L2's runtime bound, verify the
+ILW23 encoding translation, or prove any PV_1 theorem. Finite tests support
+the arithmetic checks; the general coverage arguments are Sections 2-3's
+definition-unfolding proofs, not conclusions established by random testing.
+
+### 5.5 Astra Review: Corrections Still Required
+
+This review found no obstruction to the proof architecture, but the
+following issues prevent treating the note as a completed proof:
+
+- **S0's proposed syntactic implementation loses the size resource.** A PV
+  term with N occurring only as the binary number `|N|` factors through
+  inputs of length `|D|+O(log |N|)`. It cannot generally produce the long
+  simulation outputs allowed here. Keep N as a resource argument. For
+  example, define a PV canonicalizer `Ones(N)` with value `2^|N|-1`, using
+  N as its construction resource, and define simulation through a bounded
+  runner on `Ones(N)`. Equal lengths give equal canonical resources and
+  hence S0 by congruence. Semantic length dependence is valid; it does not
+  imply the syntactic restriction asserted in Sections 0.3 and 5.1.
+- **The zero-length witness is incorrectly encoded.** For a valid
+  zero-input, one-output circuit, `Eval(C,1)` is 2 or 3. The expression
+  `1-Eval(C,1)` is therefore not an encoded output string. Under
+  `Circ(C,0,1)`, use `5-Eval(C,1)`, which swaps 2 and 3. The saved script
+  exhibits both cases.
+- **L2 must distinguish the circuit string from its sentinel.** Declare
+  `C=enc(z_C)`, require `Circ` to imply `C>=1`, and specify
+  `U(pair(E,x'),z_C)`. Prove its runtime is bounded by
+  `(4m+|z_C|+1)^c_0 = (4m+|C|)^c_0`. A bound with an additional `+1` in
+  the encoded-number expression does not imply this at the same exponent.
+  E must write the raw circuit-output bits; CSim supplies the sentinel.
+- **The universal-axiom and source-translation interfaces remain to be
+  written.** E1 and A1-A6 use string and exponent notation that must be
+  replaced by actual PV terms with length witnesses. A-enc must establish
+  the implication from this note's Eval-avoidance sentence to the sentence
+  covered by ILW23, not just assert that both encodings are efficient.
+
+The review included an independent check of the proof skeleton and the
+finite zero-length counterexamples. It did not repeat the primary-source
+literature check. The mathematical statements above have not been silently
+changed; these are explicit corrections for the next editing pass.
+
+### 5.6 Suggested next actions
 
 1. Independent check of Sections 2-4 for quantifier, guard, and length
    errors (Astra).
