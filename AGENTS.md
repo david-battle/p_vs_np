@@ -57,15 +57,14 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 ## Resume Here
 
 Read `step2_conditional_separation.md` Sections 5, 7, and 8 first: the
-conditional separation T3' now stands at paper level under the residual
-assumptions listed there, after audit and Astra's concurrence corrections;
-novelty is unassessed. Next is Fable 5.1's rebuttal review of the three
-corrections in Section 7, especially the length-profile construction in
-Section 4.3. Only after that review is resolved should the focused novelty
-check (Gate D) described in `step1_decoder.md` Section 6.8 begin, before
-any work on L2 inside PV₁. `step1_decoder.md` Section 5.3 remains the
-Step 1 result ledger; the Step 0 ledger is historical. Nothing depends
-on chat history.
+conditional separation T3' stands at paper level under the residual
+assumptions listed there, with both reviewers' concurrence after the
+corrections recorded in Section 7; the review cycle is closed. Novelty is
+unassessed. Next is the focused novelty check (Gate D) described in
+`step1_decoder.md` Section 6.8 ("After a successful transfer audit"),
+before any work on L2 inside PV₁. `step1_decoder.md` Section 5.3 remains
+the Step 1 result ledger; the Step 0 ledger is historical. Nothing
+depends on chat history.
 
 ## Operating norms
 

@@ -1068,10 +1068,10 @@ in Section 5.4. It remains a sanity check, not the basis of the acceptance.
 
 *Done, September 5, 2026:* items 1-4 below are carried out in
 [step2_conditional_separation.md](step2_conditional_separation.md); the
-audit and Astra's concurrence corrections are recorded there in Section
-7. Fable 5.1's rebuttal review is next; once resolved, the paragraph
-"After a successful transfer audit" below gives the research target:
-the focused novelty check.
+audit, Astra's concurrence corrections, and Fable 5.1's rebuttal review
+are recorded there in Section 7; the review cycle is closed. The
+paragraph "After a successful transfer audit" below now gives the
+research target: the focused novelty check.
 
 **Next target: close the T3 circuit-interface obligation before attempting
 L2 inside PV_1.** This supersedes the earlier order "Gate D novelty first,

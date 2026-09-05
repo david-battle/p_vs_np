@@ -1,9 +1,10 @@
 # Step 2: Concrete Circuit Encoding and the Transfer of ILW23's Negative Result
 
 **Status (September 5, 2026): T3 interface closed at paper level after
-audit and Astra's concurrence corrections (Section 7); Fable 5.1's
-rebuttal review is next. Conditional separation T3' stands under the
-residual assumptions of Section 5. Novelty unassessed.** This note fixes one concrete circuit
+audit, Astra's concurrence corrections, and Fable 5.1's rebuttal review
+(Section 7). Conditional separation T3' stands under the residual
+assumptions of Section 5 with both reviewers' concurrence. Novelty
+unassessed; Gate D is next.** This note fixes one concrete circuit
 encoding for `(NativeCirc, NativeEval)`, verifies properties (E-a)/(E-b) of
 [step1_decoder.md](step1_decoder.md) Section 6.5 for it, and writes the
 explicit transfer from `T^0_APC proves NativeAvoid_4` to a contradiction
@@ -433,8 +434,35 @@ were required before an unqualified paper-level sign-off:
 
 With these corrections, Astra accepts T3' at ordinary paper-proof level
 under Section 5's assumptions, not as a novelty claim or a PV_1-internal
-reversal. Fable 5.1's rebuttal review of these corrections is pending;
-no such review is claimed here.
+reversal.
+
+**Fable 5.1 rebuttal review, September 5, 2026.** All three corrections
+are accepted; none is rebutted.
+
+1. Theorem 25 fixes no input convention for multi-argument functions, so
+   the withdrawn padded-copy sentence relied on the fixed-width-per-
+   argument reading, under which a width-`L` circuit is correct on every
+   `L`-bit string as a number. For the record: ILW23's own proof of
+   Theorem 27 (p. 18) uses exactly that reading, feeding `f_i(n,C,x_1,..)`
+   with `n` and the `x_j` varying in length inside fixed `s` and
+   concluding polynomial size directly. The padded reading is therefore
+   the source's rigor level, not an error peculiar to this note. The
+   length-profile bank is nevertheless preferred here: for each fixed
+   profile the restriction of `f_i` is a fixed-input-length function, so
+   a polynomial-size circuit exists under any reading of Theorem 25, and
+   the argument no longer depends on an unstated convention. The actual
+   argument lengths are computed by leading-zero detection on the
+   fixed-width storage. The classification as should-fix rather than
+   minor is accepted, since the initial audit and the author had both
+   proposed the insufficient padded copy.
+2. Plain naming error; `NativeOut` is correct and Step 1's `Out(X)` is
+   untouched.
+3. The `O(s log s)` bound was unsupported by Section 3's own definition of
+   a standard scheme; `poly(s)` is all Steps 2 and 4 use.
+
+No further defect was found in the repaired Section 4.3. T3' stands at
+ordinary paper-proof level under Section 5's assumptions, with the
+concurrence of both reviewers. Gate D may begin.
 
 ## 8. Status
 
@@ -442,17 +470,14 @@ no such review is claimed here.
 | --- | --- | --- |
 | Concrete `(NativeCirc, NativeEval)` | Fixed (Section 2); PV, total, arbitrary description length | None |
 | (E-a), (E-b) | Established for the fixed encoding; (E-a) for other standard schemes via `code_S` | None at the `T_PV` level |
-| `T^0_APC` does not prove `NativeAvoid_4` | Derived from Theorem 25 + explicit solver + Theorem 28 under (H1), (H2), (P); audit and concurrence corrections in Section 7 | Fable's rebuttal review |
-| T3' (`T^0_APC`, `UAPC_1`, `PV_1+{Inc_c}` do not prove `CInc_{c_0}`) | Derived from the above, T1, T2, and the wrapper; accepted by Astra after corrections | Fable's rebuttal review; novelty (Gate D) |
+| `T^0_APC` does not prove `NativeAvoid_4` | Derived from Theorem 25 + explicit solver + Theorem 28 under (H1), (H2), (P); audit, concurrence corrections, and rebuttal review in Section 7 | None at paper level |
+| T3' (`T^0_APC`, `UAPC_1`, `PV_1+{Inc_c}` do not prove `CInc_{c_0}`) | Derived from the above, T1, T2, and the wrapper; accepted by both reviewers after corrections | Novelty (Gate D) |
 | Statement-level citation of Theorem 24 | Not used; would additionally need the paper's `Eval` identified | Optional |
 
 Not machine-checked; `check_step2.py` is a finite sanity check only.
 
-**Next:** Fable 5.1's rebuttal review, focused on the three concurrence
-corrections in Section 7, especially the length-profile construction in
-Section 4.3. Do not begin Gate D until that review is resolved.
-
-After that review, the research target remains the focused novelty check
-(Gate D), per `step1_decoder.md` Section 6.8, before any work on L2 inside
-PV_1. Suggested terms are listed there. A reconstruction of a known
-result is an acceptable endpoint.
+**Next:** the focused novelty check (Gate D), per `step1_decoder.md`
+Section 6.8, before any work on L2 inside PV_1. Suggested terms are
+listed there. A reconstruction of a known result is an acceptable
+endpoint. The review cycle for T3' is closed (Section 7); do not reopen
+it absent a concrete new counterexample.
