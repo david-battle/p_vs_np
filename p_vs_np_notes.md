@@ -269,10 +269,48 @@ fast, its target is false; in the world where the target is true, L is too slow
 to reach it. **L's speed and the truth of P≠NP mutually exclude each other's
 proofs** — a clean self-referential closure.
 
-**Löb footnote (ties to §4).** Add the single reflection schema "if ZFC proves
-P≠NP, then P≠NP"; by Löb's theorem ZFC then proves P≠NP outright. A reflection
-rung settles it immediately — the "host principle" argument, now with a
-proof-theoretic name.
+**"Mutual exclusion" is not independence — and is near-tautological.** It is
+easy to conflate the two, because both end up saying "not provable." But the
+mutual exclusion is conditional on whichever world is actual:
+- *If P=NP:* P≠NP is false, so a sound system doesn't prove it. But that holds
+  for **any** false arithmetic sentence — it is soundness applied to a
+  falsehood, says nothing about P vs NP, and is compatible with **ZFC proving
+  P=NP**.
+- *If P≠NP:* L doesn't find a *short* proof within its fixed budget. This does
+  not even say ZFC doesn't prove P≠NP — ZFC could prove it with an arbitrarily
+  long proof and the mutual exclusion would still hold.
+
+So the "exclusion" is: *given the actual world, the opposite claim isn't
+(shortly) provable* — compatible with anything, and it *flips* depending on the
+world. Independence, by contrast, is unconditional (same claim in both worlds):
+ZFC ⊬ P=NP **and** ZFC ⊬ P≠NP, a substantive metamathematical theorem about
+ZFC's silence in both directions, not a consequence of soundness, and hard to
+prove (non-relativizing, §5; consistency-strength-bearing, §3). The mutual
+exclusion therefore gives **zero** evidence about independence — the "never
+bites" verdict stands precisely because the construction never rises to an
+unconditional claim about ZFC.
+
+**Where self-reference actually bites (not this construction).** The vacuity is
+structural; the genuine bites live elsewhere:
+- **Löb's theorem (ties to §4).** If a sound theory T proves □_T(φ) → φ, then
+  T ⊢ φ. Add the single, un-refusable reflection axiom "Prov_ZFC(P≠NP) →
+  P≠NP" (i.e. "ZFC is sound at this sentence"); by Löb, ZFC + that axiom
+  ⊢ P≠NP. **The mildest belief one can't help holding — soundness at this one
+  sentence — already forces the resolution.** There is no room to keep P≠NP
+  independent while believing soundness; reflection at that sentence converts
+  it into a theorem. It bites by *forcing a decision*, not by collapsing the
+  theory — the escape hatch is that "ZFC is sound" can't be formalized in ZFC
+  (Gödel 2). This is the precise form of §4's "amendment."
+- **Time-hierarchy diagonalization.** A machine that (via Kleene's recursion
+  theorem) refers to its own description and runs slower than anything that
+  could simulate it yields a real separation: P ≠ EXP is a theorem. Genuine,
+  productive self-reference that bites. It fails to port to P vs NP precisely
+  because it relativizes (oracles with P^A = NP^A), which is the barrier of §5.
+- **PH-collapse / Cook–Reckhow.** P=NP ⇒ NP=coNP ⇒ short *propositional* proofs
+  of every tautology (a proof system with polynomial bounds) and PH = P. A bite
+  in the sense of a massive, falsifiable collapse; self-referential-flavored
+  ("every true sentence has a short proof" ≡ a complexity collapse), but a
+  collapse, not an inconsistency.
 
 **Honesty caveat.** Unbounded proof-search is always r.e. — dovetail over
 proofs and verify, which is already Levin-style search, no P=NP needed. P=NP
