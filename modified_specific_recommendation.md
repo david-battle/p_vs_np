@@ -318,110 +318,143 @@ independently of the prose that proposed it.
 
 ## 8. Possible Outcomes and Their Implications
 
-Reference for the reviews in Section 7. Each step has a small number of
-realistic terminal states; the labels below are used when recording where
-the work actually landed. Claims marked "to verify" are recollections of
-the literature, not checked statements.
+Use these labels at the Section 7 reviews to record established results and
+remaining obligations, not predicted success rates. Outcomes can coexist.
+Here `{Inc_c}` and `{CInc_c}` denote the full length-universal schemata in
+Section 5, with c ranging over standard positive integers, not a single
+clock exponent. Target implications remain conditional on their checked
+proofs and exact source conventions.
 
 ### Step 0
 
-- **0a. Target already known.** The forward direction is very likely in
-  Carmosino-Grosser (two-sorted) and implicit in Korten plus Jerabek. If a
-  reversal to the exact PS21/ILW23 schema also exists, Steps 1-2 become a
-  reconstruction exercise and the value moves to Step 3 preparation.
-- **0b. Forward known, reversals not.** The expected state. The one-sorted
-  translation and the parameter-free versus parameterized distinction are
-  the research content.
+- **0a. Exact target already known.** Reconstruct a useful proof and record
+  its conventions and dependencies. A checked reconstruction is a valid
+  stopping point or preparation for Step 3, without a novelty claim.
+- **0b. Only part of the target located.** Identify the precise missing
+  implication or translation. A search without a matching result leaves
+  novelty and current open-problem status unverified.
 
 ### Step 1
 
-- **1a. Both forward directions go through.** Expected once encodings are
-  fixed.
-- **1b. Parameterized case works, parameter-free case does not.** Would
-  place even unconditional incompressibility in APC_1 rather than UAPC_1,
-  contradicting the natural expectation (hard truth tables are in UAPC_1
-  by PS21 and are incompressible strings). Read this as a defect in the
-  decoder encoding, not as evidence that Inc is strong, until proven
-  otherwise.
+- **1a. Both forward directions proved.** Establishes UAPC_1 as sufficient
+  for `{Inc_c}` and APC_1 as sufficient for `{CInc_c}`. Necessity still
+  requires reversals.
+- **1b. One or both forward proofs incomplete.** Record the established
+  implication and the unresolved encoding or arithmetic step. Failure to
+  remove a hidden length parameter does not show that UAPC_1 cannot prove
+  Inc. The hard-function theorem alone does not supply the missing proof:
+  high circuit complexity implies the required time-bounded description
+  complexity only if an appropriate quantitative reduction is established.
 
 ### Step 2
 
-- **2a. Fixed-stretch reversals only.** Inc_c and CInc_c equivalent to the
-  m -> 2m or m -> 4m schemata over PV_1. Likely achievable. A correct but
-  modest result, analogous in status to Jerabek's Shannon-bound
-  equivalence before amplification.
+- **2a. Fixed-stretch results only.** Record each implication for the exact
+  string or interval schema, including parameters and clocks. Claim an
+  equivalence only when both directions are checked. Such results identify
+  a counting principle captured by incompressibility, but do not yet
+  characterize UAPC_1 or APC_1 with the full near-equal-cardinality schema.
 - **2b. Full parameterized equivalence: {CInc_c} <=> dWPHP(PV) over PV_1.**
-  Plausible, since the known stretch amplification takes a and b as
-  function inputs and z can carry them. Gives a clean characterization:
-  APC_1 = PV_1 + "strings incompressible relative to any auxiliary input
-  exist". The most likely substantive result of the program.
+  Would characterize APC_1 as PV_1 plus conditional incompressibility.
+  Carrying a and b in z resolves access to parameters, not the induction
+  or collection needed for stretch amplification. Verify those obligations
+  over PV_1 rather than importing a stronger-base conversion.
 - **2c. Full parameter-free equivalence: {Inc_c} <=> dWPHP'(PV) over PV_1.**
-  The hard case. Inc's only free parameter is the length n, recoverable
-  from the string; a in dWPHP' is not Log-sized, and the amplification
-  needs it inside the constructed function. PS21 recorded no known
-  stretch equivalence for dWPHP' over PV_1; this is essentially that
-  problem. If proved, it is a bounded-arithmetic theorem in its own right
-  (different-stretch parameter-free schemata equivalent over PV_1, with
-  Inc as pivot) and makes the ILW23 conditional separation transfer:
-  under its hypotheses, PV_1 + {Inc_c} does not prove CInc. If not
-  proved, record explicitly that the stated target is at least as hard as
-  the open stretch-conversion problem.
-- **2d. Reversal only over S^1_2.** Then dWPHP' <=> dWPHP already (PS21),
-  so Inc <=> CInc <=> dWPHP(PV) <=> hard Boolean functions (Jerabek 2004)
-  over S^1_2. Unsurprising; its use is to isolate the exact induction
-  step PV_1 cannot perform.
-- **2e. Sanity check.** A derivation of Inc => CInc over PV_1, combined
-  with both full equivalences, would refute the ILW23 hypotheses. Treat
-  any such proof as an error until shown otherwise.
+  Would similarly characterize UAPC_1 using ordinary incompressibility.
+  Any resulting stretch equivalence must specify both endpoint schemata
+  and the checked reductions. PS21 Section 2.1's unresolved equivalence
+  concerned parameter elimination, not stretch conversion; ILW23 later
+  conditionally separates those parameterized and parameter-free theories.
+  Neither citation establishes the current status of this stretch target.
+- **2d. Reversal obtained only over S^1_2.** Record the comparison theorem
+  and the stronger reasoning used in its proof. Parameterized and
+  parameter-free dWPHP are equivalent over S^1_2, as PS21 records, but
+  translating the exact Inc statements remains a proof obligation.
+  Using stronger induction does not prove that PV_1 cannot avoid it.
+- **2e. Sanity check.** A derivation of `{Inc_c} => {CInc_c}` over PV_1,
+  combined with both full equivalences, would contradict the conjunction
+  of ILW23's hypotheses. Require independent scrutiny of the reductions
+  and assumptions before accepting such a conclusion.
+- **2f. Genuine nonimplication proved.** A model or unprovability argument,
+  with any assumptions stated, could refute a target equivalence and locate
+  a real difference in proof strength. An unsuccessful proof attempt is
+  not such an argument. Nonprovability in a weak theory would concern proof
+  strength, not failure of finite counting in the standard model.
 
-Downstream of any full equivalence in Step 2, by standard tools:
+### Consequences and Limits
 
-- PV_1-provable equivalences translate to polynomial-size Extended Frege
-  derivations between the propositional families. EF-hardness of
-  "this string is K^t-incompressible" tautologies would then coincide with
-  EF-hardness of range-avoidance tautologies for PV functions, i.e. with
-  the Krajicek/Razborov proof-complexity-generator conjectures.
-- By KPT witnessing, PV_1 proving all Inc_c would give a polynomial-time
-  constant-round counterexample algorithm constructing incompressible
-  strings, hence via Korten an explicit construction against range
-  avoidance and circuit lower bounds for an E^NP-type class (exact class
-  to verify against Korten v3).
-- Under ILW23 or Ren-Wang-Zhong hypotheses, PV_1 does not prove Inc:
-  polynomial-time reasoning cannot prove that time-bounded random strings
-  exist.
-
-No branch says anything about P vs NP. Every unprovability statement above
-is conditional on hypotheses imported from ILW23 or Ren-Wang-Zhong.
+- **Conditional separation.** With both full equivalences, ILW23 Theorem 24
+  implies that PV_1 + `{Inc_c}` does not prove the entire `{CInc_c}` schema,
+  under the hypotheses in Section 2. Full equivalences are not necessary:
+  the theorem already rules out fixed-polynomial-stretch dWPHP for Eval in
+  UAPC_1. A checked UAPC_1-to-Inc forward proof and a CInc-to-Eval reversal
+  at, for example, m -> 4m bit-length stretch would suffice. This makes a
+  partial reversal potentially useful before the full-schema conversions.
+- **Which unprovability transfers.** A PV_1/APC_1 separation transfers
+  through 2b to failure of PV_1 to prove all of `{CInc_c}`. Neither that
+  separation nor UAPC_1/APC_1 separation alone establishes unprovability
+  of `{Inc_c}`: PV_1 = UAPC_1 < APC_1 is compatible with those separations.
+  Ordinary Inc unprovability needs a separate argument or hypothesis.
+- **Propositional proof complexity.** Equivalences of existence schemata
+  transfer arithmetic provability, not automatically EF hardness of
+  tautologies asserting that a particular string is incompressible or
+  outside a range. Incompressibility formulas can encode range exclusion
+  for a bounded universal decoder, but hardness transfers require explicit
+  proof transformations and fixed parameters. An identification with a
+  particular proof-complexity-generator conjecture is a separate target.
+- **Provability and explicit construction.** For a sufficiently large fixed
+  c, a PV_1 proof of length-universal Inc_c would yield an FP^NP construction
+  via KPT witnessing: NP search can supply the counterexample descriptions
+  to a constant-round Student. At table length N, circuits of size N^(1/2)
+  have descriptions of O(N^(1/2) log N) bits and their tables can be printed
+  in polynomial time in N. Choosing c to cover this simulation makes Inc_c
+  witnesses hard truth tables. At N = 2^m, constructing and indexing them
+  gives an E^NP language requiring ordinary circuits larger than 2^(m/2)
+  for all sufficiently large m. Spell out the machine bounds when using
+  this consequence. Korten's Theorems 9-10 then connect hard-table
+  construction with Empty; Theorem 6 alone reduces incompressibility
+  construction to Empty, not conversely. No full Step 2 equivalence is
+  needed here, and separate proofs for different c need not yield a
+  uniform runtime bound across c.
 
 ### Step 3
 
-- **3a. Already formalized.** Found in Step 0, item 6. Program ends as
-  reading.
-- **3b. Asymmetry.** The K^t-hard => weak-OWF direction (Theorem 4.1)
-  formalizes in APC_1 because the counted event (inverter succeeds) is
-  P-definable; the OWF => K^t-hard direction does not, because the
-  entropy and hashing arguments count events that are not obviously
-  P-definable. Rated the most likely substantive outcome. Publishable as
-  a dependency analysis with a concrete elimination target.
-- **3c. Question ill-posed as stated.** "A computes K^t(x) correctly" is
-  Sigma^b_1 and Pi^b_1, not P-definable, so the hardness hypothesis is a
-  probability over a set outside APC_1's counting framework. To verify:
-  counting Sigma^b_1-definable sets appears to need APC_2. If confirmed,
-  Step 3's first task forces a choice between moving to APC_2 and
-  reformulating hardness one-sidedly (e.g. "no A outputs a shortest
-  program"). A finding, not a defect: it sharpens "which results are
-  feasibly provable" to "in which theory is the statement expressible
-  with its intended meaning".
-- **3d. Both directions in APC_1.** Best case. Unprovability results for
-  either side transfer to the other over APC_1; Jerabek's witnessing
-  gives explicit probabilistic polynomial-time content, though the
-  original proofs already have it.
+- **3a. Exact formalization already known.** Reconstruct it or stop with a
+  source map, checking the base theory and security conventions.
+- **3b. One direction formalized; the other unresolved.** Gives a checked
+  reduction and a concrete list of missing lemmas, not an unprovability
+  result. P-definability of inverter success does not settle Theorem 4.1:
+  Liu-Pass also compare the size of a set where a heuristic disagrees with
+  K^t. Audit that comparison and weak-to-strong amplification as well as
+  the reverse direction's hashing, entropy, and generator dependencies.
+- **3c. Bounded formalization or counting estimates unresolved.** Exact
+  K^t correctness has an immediate definition as a conjunction of a
+  Sigma^b_1 condition and a Pi^b_1 condition; it is not known to be
+  P-definable in general. This is not an expressibility barrier for APC_1.
+  Jerabek 2007, Definitions 2.8 and 2.20, allow size and probability
+  comparisons for definable sets more generally than the counting-circuit
+  theorem. Section 4 supplies stronger, relativized counting tools, with
+  APC_2 covering P^NP predicates, but does not establish their necessity
+  for Liu-Pass or formalize its full proof. A shortest-program output
+  still requires checking that no shorter program works; it does not make
+  exact success P-checkable. Any changed hardness formulation needs its
+  own equivalence proof. The outcome is a precise remaining obligation or
+  a checked stronger-base result, not a claim that APC_1 is insufficient.
+- **3d. Both directions in APC_1.** Provability and unprovability results
+  for either precise assertion transfer to the other over APC_1.
+  Witnessing requires a suitable finite search statement of the prescribed
+  syntactic form; it does not apply automatically to the full cryptographic
+  equivalence. The result calibrates the proof strength of known reductions,
+  not the truth of their hardness assumptions.
 
-### Expected trajectory
+### Stopping and Scope
 
-Most probable: 0b -> 1a -> 2a or 2b -> 3b or 3c. That yields one clean
-theorem (CInc characterizes APC_1), one precisely stated open problem
-(parameter-free stretch conversion), and a dependency table showing where
-Liu-Pass leaves APC_1. The high-value, low-probability state is 2c.
-Steps 0 through 2a fit the stated constraints; 2c and 3 are open-ended and
-are where the Section 7 reviews should cut or hand off.
+A reconstruction, fixed-stretch theorem, stronger-base theorem, or precisely
+isolated proof obligation can each be a useful endpoint. Only 2b establishes
+the full APC_1 characterization; 2a alone does not. Assess novelty and
+publication value after checking the result, and feasibility from actual
+time and token expenditure rather than predicted likelihoods.
+
+Neither the target incompressibility equivalences nor a formalization of
+Liu-Pass would by itself prove one-way functions exist, settle P versus NP,
+or establish independence from ZFC. The program's direct payoff is a clearer
+account of which weak-theory axioms and proof methods support these results.
