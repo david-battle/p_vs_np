@@ -58,6 +58,25 @@ essential (kangaroo/DC) → optional (Banach–Tarski) → irrelevant (P vs NP).
   **constitutional** choices about the shape of the set universe (both sides
   coherent and productive); P vs NP is a **matter of fact about ℕ**.
 
+**Arithmetic independence is producible — but only by one route.** Forcing is
+powerless, yet proof theory is not: Paris–Harrington is a Π⁰₂ sentence
+independent of PA; Goodstein, Kruskal (Friedman), and Friedman's Boolean
+relation theory give Π⁰₁/Π⁰₂ sentences independent of ZFC and provable from
+large cardinals. Every such method works through **consistency strength /
+fast-growing functions**: a true Π⁰₂ sentence `∀a ∃b φ(a,b)` is unprovable in a
+sound theory T only if its Skolem function (least `b` for each `a`) outgrows
+every T-provably-total function.
+
+**Ben-David–Halevi (1991):** apply that to P≠NP = "∀(M,p) ∃x, M fails on x
+within p(|x|)". The least counterexample would have to grow faster than anything
+ZFC can prove total. Turned around: if P≠NP is unprovable in PA + all true Π⁰₁
+sentences, then SAT is solvable in time `n^{f(n)}` for an `f` slower than any
+provably-total function — "almost polynomial". So independence would not be a
+neutral silence: it would mean P≠NP is **true but practically false**, with a
+quantitative signature nothing in complexity theory hints at. This is the
+strongest concrete reason the "prophetic independence" reading (§5) looks
+unlikely. Reference: Aaronson, "Is P versus NP formally independent?" (2003).
+
 ## 4. "Make P ≠ NP a new axiom" — the case against and the correction
 
 Initial (too-strong) claim: "We resolve matters of fact by proof, not by
@@ -96,6 +115,29 @@ of ZFC**, the situation changes categorically:
   but "do we have a certified silence of ZFC, or just a guess."** Certification
   flips the verdict.
 
+**The correction is stronger than it first looks: an independence proof would
+name its own host.** Any proof that X is independent of ZFC proves Con(ZFC)
+(Gödel 2), so it cannot be carried out *in* ZFC — unlike CH, whose independence
+is a ZFC theorem about relative consistency. Given §3, an arithmetic
+independence proof for P vs NP would have to show that P≠NP carries consistency
+strength (something of the shape "P≠NP ⇒ Con(ZFC)", or provability from a
+reflection principle / large cardinal). If that happened, the "no principled
+host" objection dissolves automatically: the proof itself points at the next
+rung (ZFC + reflection, or ZFC + the relevant large cardinal). Certified silence
+for an arithmetic sentence comes bundled with a pointer to the stronger system
+— exactly the G-ladder shape.
+
+**"Terminal" and "not self-justifying" are also weaker than stated.** A tower
+of hardness axioms is already in daily use: P≠NP ⊂ NP ⊄ P/poly ⊂ ETH ⊂ SETH ⊂
+specific crypto assumptions, each stronger, each yielding a rich, falsifiable
+theory (fine-grained complexity, all of cryptography). These are justified
+*extrinsically* — fruitfulness and failure to refute — which is Gödel's own
+criterion for new set-theoretic axioms and how large cardinals are actually
+defended. The real difference from the Con tower is uniformity (Con is generated
+by a single reflection schema; the hardness tower is not), not that "we don't
+legislate contested facts" — the field legislates them constantly and calls
+them assumptions.
+
 ## 5. The "prophetic" reading (Hofstadter, GEB) — and why it's a loose rhyme
 
 The user's direction intuition: every barrier result has pushed toward
@@ -118,8 +160,15 @@ independence, making GEB prophetic.
 - **P vs NP has no self-reference.** GEB's core is self-reference (G says "I am
   not provable"); P vs NP has none — no fixed point, no diagonalization over its
   own provability. Its independence would be arithmetic incompleteness, a
-  different phenomenon from Gödelian self-reference, and we have no known method
-  to even produce that kind of independence (forcing is powerless).
+  different phenomenon from Gödelian self-reference; the only known route to it
+  is consistency strength (§3), which for P≠NP would force the Ben-David–Halevi
+  "almost polynomial" signature.
+- Concrete version of "barriers apply to independence too": Hartmanis–Hopcroft
+  (1976) built a computable oracle A for which P^A vs NP^A is independent of
+  ZFC, while for other oracles it is provable either way (P^B = NP^B for
+  PSPACE-complete B; P^C ≠ NP^C for the BGS oracle). A relativizing
+  independence proof would therefore be contradictory — independence proofs must
+  be non-relativizing just like separation proofs.
 - Verdict: the intuition is a live hypothesis, not a trend line. Barriers cut
   both ways; GEB is a loose rhyme, not a roadmap.
 
@@ -138,11 +187,30 @@ independence, making GEB prophetic.
   studied self-referential-feeling structures: "decide if there's a solution by
   isolating a unique one via hashing."
 
+**Direction problem in the hashing chain.** Valiant–Vazirani uses
+pairwise-independent hash families to *isolate* a unique solution, but what it
+proves is that Unique-SAT is as hard as SAT — isolation doesn't help. So
+"perfect hashing ⇒ fast NP-complete algorithms" runs opposite to what VV
+establishes. And OWFs are by definition the *obstruction* to finding structure,
+so OWF ⇒ hashing ⇒ fast algorithms would close a loop P≠NP ⇒ P=NP; one link
+must break, and that is the candidate.
+
 **The genuine kernel of self-reference:** P vs NP asks whether *deciding* can
 outrun *verifying* — "can the machine that recognizes truth also find truth?" —
 a structural echo of self-reference. The concrete, honest instance is
 **downward self-reducibility** (SAT decides by reducing to smaller SAT), which
 is real mathematics.
+
+**A firmer anchor: Levin's universal search.** Levin's algorithm `L` dovetails
+all programs and verifies any claimed witness. It solves SAT-search in
+polynomial time *iff* P=NP. So P=NP is equivalent to a Σ⁰₂ statement about one
+fixed machine: `∃k ∀x, L(x) halts within |x|^k`. The existential over
+algorithms collapses into an algorithm that searches for algorithms — the most
+honestly reflexive object in the area. Combined with downward self-reducibility
+(search ⇔ decision for SAT), this is the concrete home for "can the recognizer
+also be the finder." It is still computational reflex, not a Gödelian fixed
+point, so the verdict below stands — but it is a firmer kernel than the hashing
+chain.
 
 **But the direction of the reflex is productive, not toward independence:**
 self-reducibility and isolation are *tools for algorithms*, not a doorway out of
