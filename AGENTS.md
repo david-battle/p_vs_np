@@ -60,8 +60,9 @@ P vs NP content lives here; kangaroo-sequence content stays there.
   the incompressibility schemata sit in the squaring-stretch class, and
   the step to APC₁'s near-equal (or ILW23's `n+1`) stretch is Jeřábek's
   2007 open question, refuted relativized (JLC 2007, Cor. 3.6). Proposed
-  form 2b', the 2f-candidate, and Astra's mixed-oracle correction and
-  bounded feasibility-check recommendation (Sections 4-5).
+  form 2b', the 2f-candidate, Astra's mixed-oracle correction and
+  bounded feasibility-check recommendation (Sections 4-5), and the first
+  pass at that check with the residual obligation `(*)` (Section 6).
 
 ## Resume Here
 
@@ -71,13 +72,16 @@ reviewers' concurrence.** Read the Step 2 execution update in
 Sections 3 and 5. The conditional separation T3' stands at paper level
 under the residual assumptions in `step2_conditional_separation.md`
 Section 5; its review cycle (Section 7) is closed. Novelty is not
-established. The latest recommendation is one bounded feasibility check
-of the 2f-candidate, following Astra's preliminary review in
-`gate_e_stretch_check.md` Sections 4-5. That check is not yet executed;
-start by fixing the mixed Student-Teacher game and a time cap, not by
-proving L2 or translating incompressibility. This is not a commitment to
-a full proof campaign. Other extensions remain deliberately chosen and
-time-boxed. The full-schema targets 2b/2c are closed as routes in the
+established. The 2f-candidate feasibility check (Astra's mixed-oracle
+formulation, `gate_e_stretch_check.md` Sections 4-5) has had its first
+pass (Section 6): the direct ILW23 adaptation fails for an identified
+quantitative reason (planted-`y` failure probability `2^{-Ω(km)}` vs
+random-reply legality error `2^{-t}` at medium `t`), leaving the sharper
+obligation `(*)` (average-case white-box AVOID hardness with an inversion
+oracle). Next action is the user's decision among Section 6.4's options:
+tier-2 outreach with the sharp question (needs explicit authorization),
+a bounded literature check on `(*)`, or stop. No proof campaign is
+authorized. The full-schema targets 2b/2c are closed as routes in the
 current plan, not refuted unrelativized (the missing stretch step is
 false relativized; see the Gate E note).
 `step1_decoder.md` Section 5.3 is the Step 1 result ledger; the Step 0

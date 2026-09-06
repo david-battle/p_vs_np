@@ -280,3 +280,109 @@ are unchanged and cannot verify the mixed-oracle claims.
 Round-end verification: `git diff --check`, `python3 check_step1.py`,
 and `python3 check_step2.py` passed. The scripts provide finite
 regression checks only.
+
+## 6. Fable 5.1 Concurrence and First Pass at the Check
+
+September 5, 2026. Both of Section 4's source claims were re-read and
+confirmed: Lemma 34 uses "at most n oracle queries to the circuit-inversion
+oracle" (p. 28), and Claim 22's failure event has probability
+`2^{-Omega((2k-j)m)}` over the iO seed (p. 14). The Section 4.1 correction
+is accepted: the earlier "replace inversion gates" formulation and the
+unqualified "collapse" claim were errors. Steps 1-2 of Section 5 were then
+carried out on paper, with the result below.
+
+### 6.1 The mixed game, exactly
+
+Suppose `PV_1 + forall b>1 sPHP^b_{b^2}(PV) |- forall a>0 sPHP^a_{2a}(PV)`.
+By the deduction theorem, Parikh, and the `eval` presentation, `PV_1`
+proves an `exists-forall-exists` sentence whose KPT witnessing gives a
+constant `k` and a poly-time Student. On input `C: {0,1}^n -> {0,1}^{n+1}`
+of description length `s`, in each of at most `k` rounds the Student
+proposes either
+
+- (T) a target candidate `y in {0,1}^{n+1}`; a legal Teacher reply is
+  `x` with `C(x) = y`, or "none" if `y` is outside the range; or
+- (S) a source circuit `D: {0,1}^t -> {0,1}^{2t}` (`t >= 1`, `|D| <= s^d`,
+  `t` of the Student's choosing); a legal reply is any
+  `v in {0,1}^{2t}` outside the range of `D`.
+
+Soundness of the disjunction in the standard model: against every legal
+Teacher, some (T) proposal is answered "none" within `k` rounds. Hardness
+target: for every such Student there exist `C` and a consistent legal
+Teacher that never answers "none". Uniform Students suffice for the
+`PV_1` target.
+
+### 6.2 Obstacle (a) is removable; obstacle (b) is the real one
+
+Astra's obstacle (a): legality of an (S) reply, `forall u D(u) != v`, is
+a coNP condition the Verifier of Algorithm 1 cannot check if the Prover
+supplies `v`. The natural patch removes it: let the *Verifier* generate
+`v` as part of its randomness, brute-forcing a legal `v` when
+`t <= c log s` and sampling `v` uniformly from `{0,1}^{2t}` otherwise
+(this is ILW23's own device in Theorem 33, p. 29, at stretch `t -> t^2`).
+Then nothing coNP is checked; the `j`-good predicate on `(r, w)` remains a
+poly-size test, and the Prover's message is as before (`phi_i, x_i, y_i`,
+plus the fixed `D_i` for (S) rounds, fixed by the same averaging that
+fixes `y_j`, at a loss of `2^{-poly}` matching the existing loss).
+
+Obstacle (b), quantitative: the argument then needs
+`Pr_{r,w}[j-good and all v legal] > 0` (noticeable, for Goldwasser-Sipser).
+But `Pr[j-good] >= 2^{-Omega(km)}` while `Pr[some v illegal] <= k 2^{-t_min}`,
+with `t_min` the smallest non-brute-forced `t` the Student uses. The
+difference bound is positive only if `t_min >= Omega(km)`. Brute force
+covers `t = O(log s)`; the Student is free to query
+`O(log s) < t < Omega(km)`, and later `j`-goodness may correlate with
+`v_i` through the Student's subsequent proposals, so conditioning does
+not help. Thus the direct ILW23 adaptation plus randomized replies fails
+for adversarial Students querying medium `t`. Producing legal replies for
+medium `t` without an NP oracle is AVOID at stretch `2t` itself, so (b)
+cannot be patched on the reply side.
+
+### 6.3 What (b) says about the route
+
+The `2^{-Omega(km)}` comes from fixing each `y_j` by averaging over
+`{0,1}^m`; it is intrinsic to ILW23's planted-`y` construction. Jerabek's
+relativized proof (Section 2, item 2) has no such loss: with a random
+injection as target, the Student fails with probability `>= 4^{-c'}`, a
+constant, which is what lets random source replies (legal w.p. `-> 1`) be
+absorbed. So the sharpened obligation is:
+
+```text
+(*)  Under cryptographic hypotheses, a distribution on
+     (C: {0,1}^n -> {0,1}^{n+1}, legal inversion oracle for C)
+     on which every poly-time Student with k inversion queries fails
+     with probability Omega(1) (or at least >> 2^{-t} for every
+     t > O(log s)), not 2^{-Omega(km)}.
+```
+
+`(*)` is a strengthening of ILW23 Theorem 21 from worst-case existence to
+average-case failure. Given `(*)`, the Section 6.2 patch completes the
+transfer and the 2f-candidate follows. Whether `(*)` is known, or follows
+from iO with puncturable-PRF techniques (Sahai-Waters style, replacing
+the planted-`y` circuit by an obfuscated pseudorandom map), was not
+checked and is a research question, not a bounded audit. Nothing here is
+a proof that `(*)` is false or that 2f is false.
+
+### 6.4 Result of the check and next step
+
+Outcome of the time-boxed check: **no for the direct adaptation, with an
+identified reason**, and a sharper obligation `(*)`. Per Section 5's
+stopping rule, this supports at most one further bounded action, not a
+proof campaign. Recommended, in order:
+
+1. Tier-2 outreach with the now-sharp question, e.g. to Li or Jerabek:
+   "Is AVOID at stretch `n+1` known to be hard for poly-time algorithms
+   with `O(1)` inversion queries to the input circuit *and* `O(1)`
+   AVOID-at-stretch-`2t` queries, under iO? Equivalently, is the
+   unrelativized stretch inequivalence `PV_1 + dWPHP_{a^2} |-/- dWPHP_{2a}`
+   known under any assumption?" A one-line answer settles both novelty
+   and feasibility faster than further reading.
+2. If the answer is "not known" and the user wants to proceed: a bounded
+   literature check on `(*)` (average-case white-box AVOID hardness with
+   an inversion oracle; ILW23 follow-ups on AVOID hardness), before any
+   construction attempt.
+3. Otherwise stop; the program's durable output is the source map,
+   the closed reconstruction 2g, and the two obstacles above.
+
+Outreach requires the user's explicit authorization
+(`specific_recommendation.md` Section 5).
