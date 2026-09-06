@@ -81,7 +81,11 @@ obligation `(*)` (average-case white-box AVOID hardness with an inversion
 oracle). Next action is the user's decision among Section 6.4's options:
 tier-2 outreach with the sharp question (needs explicit authorization),
 a bounded literature check on `(*)`, or stop. No proof campaign is
-authorized. The full-schema targets 2b/2c are closed as routes in the
+authorized. The plan to execute *if* outreach reports "not known,
+plausible" is recorded in Section 6.5 (Phases A-D: extraction lemma and
+harness, `(*)'` antecedents with Krajíček 2004 pseudo-surjectivity as the
+first lead, bounded proof attempt, write-up); it is conditional, not
+started. The full-schema targets 2b/2c are closed as routes in the
 current plan, not refuted unrelativized (the missing stretch step is
 false relativized; see the Gate E note).
 `step1_decoder.md` Section 5.3 is the Step 1 result ledger; the Step 0

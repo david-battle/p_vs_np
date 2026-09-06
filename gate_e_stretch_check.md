@@ -321,9 +321,11 @@ supplies `v`. The natural patch removes it: let the *Verifier* generate
 `t <= c log s` and sampling `v` uniformly from `{0,1}^{2t}` otherwise
 (this is ILW23's own device in Theorem 33, p. 29, at stretch `t -> t^2`).
 Then nothing coNP is checked; the `j`-good predicate on `(r, w)` remains a
-poly-size test, and the Prover's message is as before (`phi_i, x_i, y_i`,
-plus the fixed `D_i` for (S) rounds, fixed by the same averaging that
-fixes `y_j`, at a loss of `2^{-poly}` matching the existing loss).
+poly-size test, and the Prover's message is as before (`phi_i, x_i, y_i`).
+The (S) proposals `D_i` need no fixing by the Prover: nothing about them
+is embedded in the circuit, so the Verifier simply computes
+`D_i = A_i(hat C, replies)` and generates `v_i`. (An earlier draft of this
+paragraph averaged over `D_i` as well; that was unnecessary.)
 
 Obstacle (b), quantitative: the argument then needs
 `Pr_{r,w}[j-good and all v legal] > 0` (noticeable, for Goldwasser-Sipser).
@@ -348,20 +350,43 @@ constant, which is what lets random source replies (legal w.p. `-> 1`) be
 absorbed. So the sharpened obligation is:
 
 ```text
-(*)  Under cryptographic hypotheses, a distribution on
+(*)  Under cryptographic hypotheses, for every poly-time Student with
+     k inversion queries there is a polynomial p and a distribution on
      (C: {0,1}^n -> {0,1}^{n+1}, legal inversion oracle for C)
-     on which every poly-time Student with k inversion queries fails
-     with probability Omega(1) (or at least >> 2^{-t} for every
-     t > O(log s)), not 2^{-Omega(km)}.
+     on which the Student fails with probability >= 1/p(s),
+     not merely 2^{-Omega(km)}.
 ```
 
-`(*)` is a strengthening of ILW23 Theorem 21 from worst-case existence to
-average-case failure. Given `(*)`, the Section 6.2 patch completes the
-transfer and the 2f-candidate follows. Whether `(*)` is known, or follows
-from iO with puncturable-PRF techniques (Sahai-Waters style, replacing
-the planted-`y` circuit by an obfuscated pseudorandom map), was not
-checked and is a research question, not a bounded audit. Nothing here is
-a proof that `(*)` is false or that 2f is false.
+Inverse-polynomial suffices, not `Omega(1)`: the brute-force cutoff
+`c log s` is chosen *after* the Student (hence after `p`), so the
+illegality mass `k s^{-c}` can be made smaller than `1/p(s)`. Legality is
+then never checked by the Verifier; it holds by the probability margin.
+The cutoff cost `s^{O(c)}` stays polynomial.
+
+Equivalent worst-case reading, which is the cleaner target:
+
+```text
+(*)' AVOID at stretch n+1 has no randomized poly-time algorithm with O(1)
+     inversion queries to the input circuit whose failure probability is
+     <= 1/p(s) for every polynomial p (quantifiers: for each algorithm
+     and each k there is a p it cannot beat).
+```
+
+Sanity checks on `(*)'`: the trivial randomized Student (guess `y`, invert,
+guess again) has constant failure `2^{-k}`, so hardness against constant
+error is false and `(*)'` is the right strength; Lemma 34 gets error 0
+with `n` inversions, so the `O(1)` bound is essential. ILW23's planted-`y`
+technique inherently refutes only deterministic (zero-error) Students,
+because the averaging step yields `2^{-Omega(km)}` and a Student with
+`1/poly` error is consistent with that. So `(*)'` is beyond the ILW23
+method as written, not a routine extension.
+
+Given `(*)`, the Section 6.2 patch completes the transfer and the
+2f-candidate follows. Whether `(*)'` is known, or follows from iO with
+puncturable-PRF techniques (Sahai-Waters style, replacing the planted-`y`
+circuit by an obfuscated pseudorandom map), was not checked and is a
+research question, not a bounded audit. Nothing here is a proof that
+`(*)'` is false or that 2f is false.
 
 ### 6.4 Result of the check and next step
 
@@ -386,3 +411,73 @@ proof campaign. Recommended, in order:
 
 Outreach requires the user's explicit authorization
 (`specific_recommendation.md` Section 5).
+
+### 6.5 Conditional plan: if outreach reports "not known, plausible"
+
+Recorded at the user's request as the plan to execute *if* the tier-2
+answer is that the mixed-oracle hardness / unrelativized stretch
+inequivalence is not known and is considered feasible. Not authorized
+until that answer arrives. Each phase gets a time cap before it starts.
+
+**Phase A: extraction lemma (bounded; no research risk).** Write Section
+6.1 as a rigorous lemma: `PV_1 + forall b>1 sPHP^b_{b^2}(eval)` is a
+single sentence, so the deduction theorem applies; Parikh bounds `b, D`
+by `2^{s^d}`; prenex to `exists-forall-exists` with existential matrix
+and apply KPT in Jerabek's form (JLC 2007, Thm 2.5); bounded `z` gives
+Student time `poly(s)`; illegal (S) replies satisfy their disjunct
+trivially, so the hardness statement must quantify over legal Teachers
+only. Deliverables: the lemma with every constant named, and a small
+finite harness (`check_gate_e.py`, standard library) that runs a stand-in
+mixed Student against brute-force legal Teachers at tiny sizes and checks
+the disjunction bookkeeping, the trivial-satisfaction case, and that a
+Lemma 34-style Student needs `n` inversions. Per the Step 1-2 lesson,
+write the script before review.
+
+**Phase B: pin down `(*)'` and its antecedents (bounded literature and
+formulation work).** Confirm the equivalence between the average-case
+form `(*)` and the randomized worst-case form `(*)'` at the quantifier
+level actually used by Phase A. Then check three leads, in order:
+
+1. Krajicek, *Dual weak pigeonhole principle, pseudo-surjective
+   functions, and provability of circuit lower bounds*, JSL 69 (2004):
+   pseudo-surjectivity of a generator against Student-Teacher
+   computations is, from memory, hardness of avoiding the range with an
+   honest (inverting) Teacher in `O(1)` rounds. If so it is the direct
+   antecedent of `(*)'` for fixed uniform generators, and its conjectural
+   status (Razborov/Krajicek generator conjectures) calibrates how hard
+   `(*)'` is. To verify against the text; not relied on here.
+2. CLOW26's randomized compression principles (`rrWPHP`, Section 6) and
+   its probabilistic-reasoning framework: the closest 2026 machinery for
+   randomized Students with small error.
+3. ILW23 Appendix B (Theorem 33, black-box barrier) and its FBPP remarks
+   (p. 24), plus post-2023 AVOID-hardness papers, for any statement about
+   randomized `O(1)`-inversion algorithms at stretch `n+1`.
+
+Exit: `(*)'` is (i) known true (then 2f is a corollary; write it up as
+such), (ii) known false or known equivalent to a major conjecture (stop,
+record), or (iii) open with a candidate technique (proceed to C).
+
+**Phase C: bounded proof attempt on `(*)'` (research risk).** Only under
+exit (iii). The single candidate technique identified so far: replace
+ILW23's planted-`y` circuit by an obfuscated map whose range membership
+the Student cannot steer away from except with `1/poly` probability,
+e.g. iO of a puncturable-PRF-based circuit in the Sahai-Waters style,
+so that the failure event is not "Student outputs the one planted `y_j`"
+but "Student's output lands in a pseudorandom dense subset". Time cap
+strictly enforced; at the cap, record a checked lemma, a precise
+unresolved step, or an obstruction.
+
+**Phase D: write-up and review.** Statement of the 2f theorem with exact
+hypotheses (iO flavour, coNP hypothesis, any new assumption from Phase
+C), the Phase A lemma, the `(*)'` proof or citation, and a novelty
+section positioned against Jerabek JLC 2007 (relativized), ILW23 (stretch
+`n+1`, inversion-only), and whatever Phase B found. Two-model review
+cycle as in Steps 1-2, then a decision on posting (ECCC/arXiv) or
+collaboration.
+
+On the "don't steal the idea" premise: the outreach email should contain
+the sharp *question*, not the Phase C construction. Answers of the form
+"known, see X" or "not known" carry no idea-transfer risk. If a
+respondent engages substantively, offering co-authorship is the normal
+and correct outcome, not a loss. Priority is established by a dated
+preprint once a checked result exists, not before.
