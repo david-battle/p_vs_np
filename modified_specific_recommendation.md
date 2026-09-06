@@ -300,8 +300,11 @@ schemata are in the squaring-stretch class; the conversion to the
 near-equal schema below is Jerabek's 2007 open question, whose
 relativization is refuted (JLC 2007, Corollary 3.6). Item 2 below is
 therefore not reachable by this project's relativizing constructions.
-The reachable form is 2b' (equivalence with `forall a sPHP^a_{a^2}(PV)`
-over `PV_1`, pending L2 in `PV_1`), of low novelty.
+The proposed reduced target is 2b' (equivalence with
+`forall a>1 sPHP^a_{a^2}(PV)` over `PV_1`, pending internalization,
+including L2). It has close antecedents; substantial novelty is not
+established. For the latest review and bounded feasibility-check
+recommendation on 2f instead, see that note's Sections 4-5.
 
 Test the following equivalences over PV_1, using the exact schemata in
 Section 2:

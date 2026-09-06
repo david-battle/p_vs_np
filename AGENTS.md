@@ -59,8 +59,9 @@ P vs NP content lives here; kangaroo-sequence content stays there.
 - `gate_e_stretch_check.md` - precheck of the full-schema targets 2b/2c:
   the incompressibility schemata sit in the squaring-stretch class, and
   the step to APC₁'s near-equal (or ILW23's `n+1`) stretch is Jeřábek's
-  2007 open question, refuted relativized (JLC 2007, Cor. 3.6). Reachable
-  form 2b', the 2f-candidate, and the decision.
+  2007 open question, refuted relativized (JLC 2007, Cor. 3.6). Proposed
+  form 2b', the 2f-candidate, and Astra's mixed-oracle correction and
+  bounded feasibility-check recommendation (Sections 4-5).
 
 ## Resume Here
 
@@ -70,12 +71,15 @@ reviewers' concurrence.** Read the Step 2 execution update in
 Sections 3 and 5. The conditional separation T3' stands at paper level
 under the residual assumptions in `step2_conditional_separation.md`
 Section 5; its review cycle (Section 7) is closed. Novelty is not
-established. There is no pending task: any further work is a deliberately
-chosen extension (L2 inside PV₁, the squaring-class characterization 2b',
-the 2f-candidate stretch separation, or the Liu–Pass audit), to be
-time-boxed and justified against RSW22/ILW23/CLOW26 before starting. The
-full-schema targets 2b/2c as written are closed by `gate_e_stretch_check.md`
-(the missing step is Jeřábek's open stretch question, false relativized).
+established. The latest recommendation is one bounded feasibility check
+of the 2f-candidate, following Astra's preliminary review in
+`gate_e_stretch_check.md` Sections 4-5. That check is not yet executed;
+start by fixing the mixed Student-Teacher game and a time cap, not by
+proving L2 or translating incompressibility. This is not a commitment to
+a full proof campaign. Other extensions remain deliberately chosen and
+time-boxed. The full-schema targets 2b/2c are closed as routes in the
+current plan, not refuted unrelativized (the missing stretch step is
+false relativized; see the Gate E note).
 `step1_decoder.md` Section 5.3 is the Step 1 result ledger; the Step 0
 ledger is historical. Nothing depends on chat history.
 
@@ -87,7 +91,11 @@ check before, not after, investing in internal formalization.
 
 ## Operating norms
 
-- At the end of every round that changes tracked project files, verify and
+- At the end of every round, including discussion-only and review rounds,
+  make any new conclusions, corrections, recommendations, decisions, and
+  operating rules durable in the appropriate project notes or this file.
+  Update the handoff when the next action changes; do not leave durable
+  knowledge only in chat or duplicate it across documents. Then verify and
   commit that round's scoped changes without waiting for a separate request.
   Do not create empty commits or include unrelated work.
 - The user performs the final push manually. Do not run `git push` (or the
